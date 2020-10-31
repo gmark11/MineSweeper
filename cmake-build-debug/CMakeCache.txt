@@ -227,6 +227,21 @@ ProcessorCount_cmd_sysctl:FILEPATH=/usr/sbin/sysctl
 //Path to a library.
 SDL2MAIN_LIBRARY:FILEPATH=/usr/local/lib/libSDL2main.a
 
+//Path to a file.
+SDL2Mixer_INCLUDE_DIR:PATH=/usr/local/include/SDL2
+
+//Path to a library.
+SDL2Mixer_LIBRARY:FILEPATH=/usr/local/lib/libSDL2_mixer.dylib
+
+//Path to a library.
+SDL2TTFMAIN_LIBRARY:FILEPATH=/usr/local/lib/libSDL2_ttf.dylib
+
+//Path to a file.
+SDL2TTF_INCLUDE_DIR:PATH=/usr/local/include/SDL2
+
+//Where the SDL2TTF Library can be found
+SDL2TTF_LIBRARY:STRING=/usr/local/lib/libSDL2_ttf.dylib;/usr/local/lib/libSDL2_ttf.dylib;-framework Cocoa
+
 //Value Computed by CMake
 SDL2_Basic_Setup_BINARY_DIR:STATIC=/Users/gobolos-mark/Desktop/MineSweeper/cmake-build-debug
 
@@ -234,10 +249,10 @@ SDL2_Basic_Setup_BINARY_DIR:STATIC=/Users/gobolos-mark/Desktop/MineSweeper/cmake
 SDL2_Basic_Setup_SOURCE_DIR:STATIC=/Users/gobolos-mark/Desktop/MineSweeper
 
 //Path to a file.
-SDL2_IMAGE_INCLUDE_DIR:PATH=SDL2_IMAGE_INCLUDE_DIR-NOTFOUND
+SDL2_IMAGE_INCLUDE_DIR:PATH=/usr/local/include/SDL2
 
-//Path to a library.
-SDL2_IMAGE_LIBRARY_TEMP:FILEPATH=SDL2_IMAGE_LIBRARY_TEMP-NOTFOUND
+//Where the SDL2_image Library can be found
+SDL2_IMAGE_LIBRARY:STRING=/usr/local/lib/libSDL2_image.dylib
 
 //Path to a file.
 SDL2_INCLUDE_DIR:PATH=/usr/local/include/SDL2
@@ -393,7 +408,19 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding SDL2
 FIND_PACKAGE_MESSAGE_DETAILS_SDL2:INTERNAL=[/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2.dylib;-framework Cocoa][/usr/local/include/SDL2][v()]
+//Details about finding SDL2Mixer
+FIND_PACKAGE_MESSAGE_DETAILS_SDL2Mixer:INTERNAL=[/usr/local/lib/libSDL2_mixer.dylib][/usr/local/include/SDL2][/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2.dylib;-framework Cocoa][/usr/local/include/SDL2][v()]
+//Details about finding SDL2TTF
+FIND_PACKAGE_MESSAGE_DETAILS_SDL2TTF:INTERNAL=[/usr/local/lib/libSDL2_ttf.dylib;/usr/local/lib/libSDL2_ttf.dylib;-framework Cocoa][/usr/local/include/SDL2][v()]
+//Details about finding SDL2_IMAGE
+FIND_PACKAGE_MESSAGE_DETAILS_SDL2_IMAGE:INTERNAL=[/usr/local/lib/libSDL2_image.dylib][/usr/local/include/SDL2][v()]
 //ADVANCED property for variable: ProcessorCount_cmd_sysctl
 ProcessorCount_cmd_sysctl-ADVANCED:INTERNAL=1
-SDL2_LIBRARY_TEMP:INTERNAL=/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2.dylib;-framework Cocoa
+//ADVANCED property for variable: SDL2Mixer_INCLUDE_DIR
+SDL2Mixer_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SDL2Mixer_LIBRARY
+SDL2Mixer_LIBRARY-ADVANCED:INTERNAL=1
+SDL2TTF_LIBRARY_TEMP:INTERNAL=/usr/local/lib/libSDL2_ttf.dylib;/usr/local/lib/libSDL2_ttf.dylib;/usr/local/lib/libSDL2_ttf.dylib;/usr/local/lib/libSDL2_ttf.dylib;-framework Cocoa;-framework Cocoa;-framework Cocoa
+SDL2_IMAGE_LIBRARY_TEMP:INTERNAL=/usr/local/lib/libSDL2_image.dylib
+SDL2_LIBRARY_TEMP:INTERNAL=/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2main.a;/usr/local/lib/libSDL2.dylib;-framework Cocoa;-framework Cocoa;-framework Cocoa;-framework Cocoa;-framework Cocoa;-framework Cocoa;-framework Cocoa
 

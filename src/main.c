@@ -28,11 +28,11 @@ SDL_Texture *_headerText;
 SDL_Texture *_image;
 
 // Our sample rectangle that we can drag around the viewport
-SDL_Rect _sampleRect = {.x = 10, .y = 10, .w = 100, .h = 100};
-SDL_bool _inSampleRect = SDL_FALSE;
+//SDL_Rect _sampleRect = {.x = 10, .y = 10, .w = 100, .h = 100};
+//SDL_bool _inSampleRect = SDL_FALSE;
 
 // Our sample 'music'
-Mix_Music *_music = NULL;
+//Mix_Music *_music = NULL;
 
 /**
  * Initialise SDL2 and output some useful display info
@@ -75,7 +75,7 @@ void init_ttf()
 
 /**
  * Initialise mixer
- */
+
 void init_audio()
 {
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
@@ -83,7 +83,7 @@ void init_audio()
     } else {
         printf("Audio Initialised\n");
     }
-}
+} */
 
 /**
  * Setup a sample header text
