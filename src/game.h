@@ -2,12 +2,12 @@
 #define GAME_H
 
 typedef enum CellType{
-    downside, simple, one, two, free, four, five, bomb
+    simple, one, two, free, four, five, bomb
 }CellType;
 
 typedef struct Cell{
 	CellType type;
-	bool checked;
+	bool shown;
 	bool marked;
 } Cell;
 
