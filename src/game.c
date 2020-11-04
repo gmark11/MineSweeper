@@ -3,14 +3,13 @@
 #include <stdbool.h>
 #include "game.h"
 
-
 /**
  * Marks the selected cell.
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-static void game_over(){
-
+static void game_over()
+{
 }
 
 /**
@@ -18,28 +17,32 @@ static void game_over(){
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-static int show(Cell *c){
+static int show(Cell *c)
+{
     c->shown = true;
-    if(c->type==bomb){
+    if (c->type == bomb)
+    {
         game_over();
     }
-    else{
-        switch (c->type) {
-            case one:
-                //
-                break;
-            case two:
-                //
-                break;
-            case three:
-                //
-                break;
-            case four:
-                //
-                break;
-            case five:
-                //
-                break;
+    else
+    {
+        switch (c->type)
+        {
+        case one:
+            //
+            break;
+        case two:
+            //
+            break;
+        case three:
+            //
+            break;
+        case four:
+            //
+            break;
+        case five:
+            //
+            break;
         }
     }
     return 0;
@@ -50,7 +53,8 @@ static int show(Cell *c){
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-static int mark(Cell *c){
+static int mark(Cell *c)
+{
     c->marked = true;
 }
 
@@ -60,11 +64,14 @@ static int mark(Cell *c){
  * @param mouse The type of the mouse click (left or right).
  * @return void
  */
-void click(Cell *c, Click mouse){
-    if(mouse==left){
+void click(Cell *c, Click mouse)
+{
+    if (mouse == left)
+    {
         show(c);
     }
-    if(mouse==right){
+    if (mouse == right)
+    {
         mark(c);
     }
 }
@@ -75,7 +82,8 @@ void click(Cell *c, Click mouse){
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return 0, if successful save
  */
-int save(){
+int save()
+{
     FILE *fp = fopen("save.txt", "wt");
     fprintf(fp, "MineSweeper Save\n");
     //Map settings
@@ -90,8 +98,8 @@ int save(){
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return true, ha sikeres volt a mentés.
  */
-int load_game(){
-
+int load_game()
+{
 }
 
 /**
@@ -100,10 +108,10 @@ int load_game(){
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return true, ha sikeres volt a mentés.
  */
-int new_game(){
-
+int new_game()
+{
 }
-
+/*
 Cell* set_bombs(int x, int y, int bomb_num, Cell *cells){
     srand(time(NULL));
 
@@ -131,8 +139,10 @@ Cell* set_bombs(int x, int y, int bomb_num, Cell *cells){
  * @param bombs The numbers of bombs.
  * @return true, ha sikeres volt a mentés.
  */
-int setup(int x, int y, int bombs){
-    Cell cells[x][y];
+/*
+Cell* setup(int x, int y, int bombs){
+    Cell cells** = (Cell**) malloc(y*sizeof(Cell*));
+    cells[0] =
     for(int i=0; i<x; i++){
         for(int j=0; j<y; j++){
             cells[i][j].type = simple;
@@ -141,5 +151,5 @@ int setup(int x, int y, int bombs){
         }
     }
     cells = set_bombs(x, y, bombs, cells);
-    return 0;
-}
+    return cells;
+}*/

@@ -3,32 +3,49 @@
 
 #include <stdbool.h>
 
-typedef enum CellType{
-    simple, one, two, three, four, five, bomb
-}CellType;
+typedef enum CellType
+{
+    simple,
+    one,
+    two,
+    three,
+    four,
+    five,
+    bomb
+} CellType;
 
-typedef struct Cell{
-	CellType type;
-	bool shown;
-	bool marked;
+typedef struct Cell
+{
+    CellType type;
+    bool shown;
+    bool marked;
 } Cell;
 
-typedef enum GameMode{
-    easy = 10, medium = 20, hard = 30
-}GameMode;
+typedef enum GameMode
+{
+    easy_mode = 10,
+    medium_mode = 20,
+    hard_mode = 30
+} GameMode;
 
-typedef enum Field{
-    small = 7, medium = 15, big = 30
-}Field;
+typedef enum Field
+{
+    small_field = 7,
+    medium_field = 15,
+    big_field = 30
+} Field;
 
-typedef struct Game{
+typedef struct Game
+{
     GameMode mode;
     Field field;
-}Game;
+} Game;
 
-typedef enum Click{
-    right, left
-}Click;
+typedef enum Click
+{
+    right,
+    left
+} Click;
 
 void click(Cell *c, Click mouse);
 int save();
@@ -37,4 +54,3 @@ int new_game();
 int setup(int x, int y, int bombs);
 
 #endif
-

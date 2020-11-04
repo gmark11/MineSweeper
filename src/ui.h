@@ -4,4 +4,3 @@
 int open_window();
 
 #endif
-

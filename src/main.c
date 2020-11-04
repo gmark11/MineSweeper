@@ -3,8 +3,11 @@
 #include "ui.h"
 #include "game.h"
 
-int main() {
+int main()
+{
     open_window();
+    //Cell* cells = setup();
 
+    //free(cells);
     return 0;
 }
