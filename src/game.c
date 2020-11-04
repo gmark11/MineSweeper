@@ -21,13 +21,18 @@ void click(Cell *c, Click mouse){
 }
 
 /**
- * Elmenti a játékot egy fájlba.
+ * Saves current status to a txt file.
  * @param pj A mentendő játék.
  * @param fajlnev A fájl neve, amit létrehoz.
- * @return true, ha sikeres volt a mentés.
+ * @return 0, if successful save
  */
 int save(){
-
+    FILE *fp = fopen("save.txt", "wt");
+    fprintf(fp, "MineSweeper Save\n");
+    //Map settings
+    //Current status
+    fclose(fp);
+    return 0;
 }
 
 /**

@@ -54,6 +54,7 @@ dkms.conf
 # Own
 obj/
 bin/
+cmake-build-debug/
 *.cbp
 *.depend
 *.layout
