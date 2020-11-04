@@ -3,7 +3,56 @@
 #include <stdbool.h>
 #include "game.h"
 
-Cell cells[][];
+
+/**
+ * Marks the selected cell.
+ * @param c A The clicked cell.
+ * @return true, ha sikeres volt a mentés.
+ */
+static void game_over(){
+
+}
+
+/**
+ * Shows the selected cell.
+ * @param c A The clicked cell.
+ * @return true, ha sikeres volt a mentés.
+ */
+static int show(Cell *c){
+    c->shown = true;
+    if(c->type==bomb){
+        game_over();
+    }
+    else{
+        switch (c->type) {
+            case one:
+                //
+                break;
+            case two:
+                //
+                break;
+            case three:
+                //
+                break;
+            case four:
+                //
+                break;
+            case five:
+                //
+                break;
+        }
+    }
+    return 0;
+}
+
+/**
+ * Marks the selected cell.
+ * @param c A The clicked cell.
+ * @return true, ha sikeres volt a mentés.
+ */
+static int mark(Cell *c){
+    c->marked = true;
+}
 
 /**
  * Handles mouse clicks (left or right).
@@ -55,6 +104,26 @@ int new_game(){
 
 }
 
+Cell* set_bombs(int x, int y, int bomb_num, Cell *cells){
+    srand(time(NULL));
+
+    int bomb_cells[bomb_num][2];
+
+    //TODO: Do not let it generate more than once the same num!!
+    for(int i=0; i<bomb_num; i++){
+        bomb_cells[i][0] = rand() % x;
+        bomb_cells[i][1] = rand() % y;
+    }
+
+    for(int i=0; i<bomb_num; i++){
+        cells[bomb_cells[i][0]][bomb_cells[i][1]].type = bomb;
+    }
+
+    //Search and set cell
+    return *cells;
+}
+
+
 /**
  * Initializes the cells, based on the given settings
  * @param x Numbers of cells on the X-coordinate.
@@ -63,60 +132,14 @@ int new_game(){
  * @return true, ha sikeres volt a mentés.
  */
 int setup(int x, int y, int bombs){
+    Cell cells[x][y];
     for(int i=0; i<x; i++){
         for(int j=0; j<y; j++){
-            //cells[i][j].type = ;
+            cells[i][j].type = simple;
             cells[i][j].shown = false;
             cells[i][j].marked = false;
         }
     }
-}
-
-/**
- * Shows the selected cell.
- * @param c A The clicked cell.
- * @return true, ha sikeres volt a mentés.
- */
-static int show(Cell *c){
-    c->shown = true;
-    if(c->type==bomb){
-        game_over();
-    }
-    else{
-        switch (c->type) {
-            case one:
-                //
-                break;
-            case two:
-                //
-                break;
-            case three:
-                //
-                break;
-            case four:
-                //
-                break;
-            case five:
-                //
-                break;
-        }
-    }
-}
-
-/**
- * Marks the selected cell.
- * @param c A The clicked cell.
- * @return true, ha sikeres volt a mentés.
- */
-static int mark(Cell *c){
-    c->marked = true;
-}
-
-/**
- * Marks the selected cell.
- * @param c A The clicked cell.
- * @return true, ha sikeres volt a mentés.
- */
-static void game_over(){
-
+    cells = set_bombs(x, y, bombs, cells);
+    return 0;
 }

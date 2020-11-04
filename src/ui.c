@@ -27,16 +27,28 @@ void sdl_init(char const *title, int width, int height, SDL_Window **pwindow, SD
 
 
 int open_window(){
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Surface* loading_surf;
+    SDL_Texture* background;
+
     sdl_init("MineSweeper", 1280, 720, &window, &renderer);
 
+    loading_surf = SDL_LoadBMP("resources/background.png");
+    background = SDL_CreateTextureFromSurface(renderer, loading_surf);
+    SDL_FreeSurface(loading_surf);
+
+    SDL_RenderCopy(renderer, background, NULL, NULL);
     SDL_RenderPresent(renderer);
+    SDL_Delay(500);
 
     SDL_Event ev;
     while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
     }
 
+    SDL_DestroyTexture(background);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     SDL_Quit();
 
     return 0;
