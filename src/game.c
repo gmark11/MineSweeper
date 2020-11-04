@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "game.h"
@@ -8,25 +8,23 @@
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-static void game_over()
-{
-}
+void game_over(){}
 
 /**
  * Shows the selected cell.
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-static int show(Cell *c)
+int show(Cell **c, int x, int y)
 {
-    c->shown = true;
-    if (c->type == bomb)
+    c[x][y].shown = true;
+    if (c[x][y].type == bomb)
     {
         game_over();
     }
     else
     {
-        switch (c->type)
+        switch (c[x][y].type)
         {
         case one:
             //
@@ -53,28 +51,12 @@ static int show(Cell *c)
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-static int mark(Cell *c)
+int mark(Cell **c, int x, int y)
 {
-    c->marked = true;
+    c[x][y].marked = true;
 }
 
-/**
- * Handles mouse clicks (left or right).
- * @param c The clicked cell.
- * @param mouse The type of the mouse click (left or right).
- * @return void
- */
-void click(Cell *c, Click mouse)
-{
-    if (mouse == left)
-    {
-        show(c);
-    }
-    if (mouse == right)
-    {
-        mark(c);
-    }
-}
+
 
 /**
  * Saves current status to a txt file.
@@ -88,6 +70,7 @@ int save()
     fprintf(fp, "MineSweeper Save\n");
     //Map settings
     //Current status
+    //time
     fclose(fp);
     return 0;
 }
@@ -111,8 +94,9 @@ int load_game()
 int new_game()
 {
 }
-/*
-Cell* set_bombs(int x, int y, int bomb_num, Cell *cells){
+
+
+Cell** set_bombs(int x, int y, int bomb_num, Cell **cells){
     srand(time(NULL));
 
     int bomb_cells[bomb_num][2];
@@ -128,7 +112,7 @@ Cell* set_bombs(int x, int y, int bomb_num, Cell *cells){
     }
 
     //Search and set cell
-    return *cells;
+    return cells;
 }
 
 
@@ -139,10 +123,12 @@ Cell* set_bombs(int x, int y, int bomb_num, Cell *cells){
  * @param bombs The numbers of bombs.
  * @return true, ha sikeres volt a mentés.
  */
-/*
-Cell* setup(int x, int y, int bombs){
-    Cell cells** = (Cell**) malloc(y*sizeof(Cell*));
-    cells[0] =
+Cell** setup(int x, int y, int bombs){
+    Cell **cells = (Cell**) malloc(y*sizeof(Cell*));
+    for(x=0; x<y; x++){
+        cells[x] = (Cell*) malloc(x * sizeof(Cell));
+    }
+
     for(int i=0; i<x; i++){
         for(int j=0; j<y; j++){
             cells[i][j].type = simple;
@@ -150,6 +136,6 @@ Cell* setup(int x, int y, int bombs){
             cells[i][j].marked = false;
         }
     }
-    cells = set_bombs(x, y, bombs, cells);
+    //cells = set_bombs(x, y, bombs, cells);
     return cells;
-}*/
+}

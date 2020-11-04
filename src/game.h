@@ -1,4 +1,4 @@
-﻿#ifndef GAME_H
+#ifndef GAME_H
 #define GAME_H
 
 #include <stdbool.h>
@@ -41,16 +41,13 @@ typedef struct Game
     Field field;
 } Game;
 
-typedef enum Click
-{
-    right,
-    left
-} Click;
-
 void click(Cell *c, Click mouse);
 int save();
 int load_game();
 int new_game();
-int setup(int x, int y, int bombs);
+Cell** setup(int x, int y, int bombs);
+int show(Cell **c, int x, int y);
+int mark(Cell **c, int x, int y);
+void game_over();
 
 #endif

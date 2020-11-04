@@ -1,4 +1,4 @@
-﻿#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
@@ -62,4 +62,22 @@ int open_window()
     SDL_Quit();
 
     return 0;
+}
+
+/**
+ * Handles mouse clicks (left or right).
+ * @param c The clicked cell.
+ * @param mouse The type of the mouse click (left or right).
+ * @return void
+ */
+void click(Cell **c, int x, int y, Click mouse)
+{
+    if (mouse == left)
+    {
+        //show(c);
+    }
+    if (mouse == right)
+    {
+        //mark(c);
+    }
 }
