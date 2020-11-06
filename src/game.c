@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include "game.h"
 
 /**
@@ -51,9 +52,9 @@ int show(Cell **c, int x, int y)
  * @param c A The clicked cell.
  * @return true, ha sikeres volt a mentés.
  */
-int mark(Cell **c, int x, int y)
+void mark(Cell **c, Game game)
 {
-    c[x][y].marked = true;
+    c[game.x][game.y].marked = true;
 }
 
 
@@ -64,12 +65,18 @@ int mark(Cell **c, int x, int y)
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return 0, if successful save
  */
-int save()
+int save(Game game, Cell** cells)
 {
     FILE *fp = fopen("save.txt", "wt");
     fprintf(fp, "MineSweeper Save\n");
-    //Map settings
-    //Current status
+    fprintf(fp, "Game settings\n");
+    fprintf(fp, "%d %d\n", game.mode, game.field);
+    fprintf(fp, "Cells settings\n");
+    for(int i=0; i<game.x; i++){
+        for(int j=0; j<game.y; j++){
+            fprintf(fp, "%d %d %d\n", cells[i][j].type, cells[i][j].shown, cells[i][j].marked);
+        }
+    }
     //time
     fclose(fp);
     return 0;
@@ -81,9 +88,17 @@ int save()
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return true, ha sikeres volt a mentés.
  */
-int load_game()
+/*Game load()
 {
-}
+    FILE *fp = fopen("save.txt", "rt");
+    //Map settings
+    Game game;
+    game.mode =
+    game.field =
+
+    //time
+    fclose(fp);
+}*/
 
 /**
  * Elmenti a játékot egy fájlba.
@@ -91,20 +106,28 @@ int load_game()
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return true, ha sikeres volt a mentés.
  */
-int new_game()
+Game new_game(GameMode mode, Field field)
 {
+    Game game;
+    game.mode = mode;
+    game.field = field;
+
+    game.x = game.field;
+    game.y = game.field;
+
+    return game;
 }
 
 
-Cell** set_bombs(int x, int y, int bomb_num, Cell **cells){
+Cell** set_bombs(Game game, int bomb_num, Cell **cells){
     srand(time(NULL));
 
     int bomb_cells[bomb_num][2];
 
     //TODO: Do not let it generate more than once the same num!!
     for(int i=0; i<bomb_num; i++){
-        bomb_cells[i][0] = rand() % x;
-        bomb_cells[i][1] = rand() % y;
+        bomb_cells[i][0] = rand() % game.x;
+        bomb_cells[i][1] = rand() % game.y;
     }
 
     for(int i=0; i<bomb_num; i++){
@@ -123,14 +146,14 @@ Cell** set_bombs(int x, int y, int bomb_num, Cell **cells){
  * @param bombs The numbers of bombs.
  * @return true, ha sikeres volt a mentés.
  */
-Cell** setup(int x, int y, int bombs){
-    Cell **cells = (Cell**) malloc(y*sizeof(Cell*));
-    for(x=0; x<y; x++){
+Cell** setup(Game game, int bombs){
+    Cell **cells = (Cell**) malloc(game.y*sizeof(Cell*));
+    for(int x=0; x<game.y; x++){
         cells[x] = (Cell*) malloc(x * sizeof(Cell));
     }
 
-    for(int i=0; i<x; i++){
-        for(int j=0; j<y; j++){
+    for(int i=0; i<game.x; i++){
+        for(int j=0; j<game.y; j++){
             cells[i][j].type = simple;
             cells[i][j].shown = false;
             cells[i][j].marked = false;

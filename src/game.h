@@ -37,17 +37,19 @@ typedef enum Field
 
 typedef struct Game
 {
+    int x;
+    int y;
     GameMode mode;
     Field field;
 } Game;
 
-void click(Cell *c, Click mouse);
-int save();
+int save(Game game, Cell** cells);
+Game new_game(GameMode mode, Field field);
 int load_game();
-int new_game();
-Cell** setup(int x, int y, int bombs);
+Cell** set_bombs(Game game, int bomb_num, Cell **cells);
+Cell** setup(Game game, int bombs);
 int show(Cell **c, int x, int y);
-int mark(Cell **c, int x, int y);
+void mark(Cell **c, Game game);
 void game_over();
 
 #endif
