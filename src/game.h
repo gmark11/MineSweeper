@@ -46,10 +46,9 @@ typedef struct Game
 int save(Game game, Cell** cells);
 Game new_game(GameMode mode, Field field);
 int load_game();
-Cell** set_bombs(Game game, int bomb_num, Cell **cells);
-Cell** setup(Game game, int bombs);
 int show(Cell **c, int x, int y);
 void mark(Cell **c, Game game);
 void game_over();
+void setup_cells(Game game, Cell** pcells);
 
 #endif

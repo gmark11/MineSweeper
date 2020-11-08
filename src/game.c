@@ -119,18 +119,18 @@ Game new_game(GameMode mode, Field field)
 }
 
 
-Cell** set_bombs(Game game, int bomb_num, Cell **cells){
+static Cell** set_bombs(Game game, Cell **cells){
     srand(time(NULL));
 
-    int bomb_cells[bomb_num][2];
+    int bomb_cells[game.mode][2];
 
     //TODO: Do not let it generate more than once the same num!!
-    for(int i=0; i<bomb_num; i++){
+    for(int i=0; i<game.mode; i++){
         bomb_cells[i][0] = rand() % game.x;
         bomb_cells[i][1] = rand() % game.y;
     }
 
-    for(int i=0; i<bomb_num; i++){
+    for(int i=0; i<game.mode; i++){
         cells[bomb_cells[i][0]][bomb_cells[i][1]].type = bomb;
     }
 
@@ -146,8 +146,8 @@ Cell** set_bombs(Game game, int bomb_num, Cell **cells){
  * @param bombs The numbers of bombs.
  * @return true, ha sikeres volt a mentés.
  */
-Cell** setup(Game game, int bombs){
-    Cell **cells = (Cell**) malloc(game.y*sizeof(Cell*));
+void setup_cells(Game game, Cell** cells){
+    cells = (Cell**) malloc(game.y*sizeof(Cell*));
     for(int x=0; x<game.y; x++){
         cells[x] = (Cell*) malloc(x * sizeof(Cell));
     }
@@ -159,6 +159,7 @@ Cell** setup(Game game, int bombs){
             cells[i][j].marked = false;
         }
     }
-    //cells = set_bombs(x, y, bombs, cells);
-    return cells;
+
+
+    cells = set_bombs(game, cells);
 }
