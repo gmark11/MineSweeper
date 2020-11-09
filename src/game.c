@@ -65,21 +65,20 @@ void mark(Cell **c, Game game)
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return 0, if successful save
  */
-int save(Game game, Cell** cells)
+void save(Game *game, Cell **cells)
 {
     FILE *fp = fopen("save.txt", "wt");
     fprintf(fp, "MineSweeper Save\n");
     fprintf(fp, "Game settings\n");
-    fprintf(fp, "%d %d\n", game.mode, game.field);
+    fprintf(fp, "%d %d\n", game->mode, game->field);
     fprintf(fp, "Cells settings\n");
-    for(int i=0; i<game.x; i++){
-        for(int j=0; j<game.y; j++){
+    for(int i=0; i<game->x; i++){
+        for(int j=0; j<game->y; j++){
             fprintf(fp, "%d %d %d\n", cells[i][j].type, cells[i][j].shown, cells[i][j].marked);
         }
     }
     //time
     fclose(fp);
-    return 0;
 }
 
 /**
@@ -106,38 +105,35 @@ int save(Game game, Cell** cells)
  * @param fajlnev A fájl neve, amit létrehoz.
  * @return true, ha sikeres volt a mentés.
  */
-Game new_game(GameMode mode, Field field)
+void new_game(Game *game, GameMode mode, Field field)
 {
-    Game game;
-    game.mode = mode;
-    game.field = field;
+    game->mode = mode;
+    game->field = field;
 
-    game.x = game.field;
-    game.y = game.field;
-
-    return game;
+    game->x = game->field;
+    game->y = game->field;
 }
 
 
-static Cell** set_bombs(Game game, Cell **cells){
+static Cell** set_bombs(Game *game, Cell **cells){
     srand(time(NULL));
 
-    int bomb_cells[game.mode][2];
+    int bomb_cells[game->mode][2];
 
     //TODO: Do not let it generate more than once the same num!!
-    for(int i=0; i<game.mode; i++){
-        bomb_cells[i][0] = rand() % game.x;
-        bomb_cells[i][1] = rand() % game.y;
+    for(int i=0; i<game->mode; i++){
+        bomb_cells[i][0] = rand() % game->x;
+        bomb_cells[i][1] = rand() % game->y;
     }
 
-    for(int i=0; i<game.mode; i++){
+    for(int i=0; i<game->mode; i++){
         cells[bomb_cells[i][0]][bomb_cells[i][1]].type = bomb;
     }
 
-    //Search and set cell
+    //TODO: Search and set cell
+    //TODO: Set cell types
     return cells;
 }
-
 
 /**
  * Initializes the cells, based on the given settings
@@ -146,20 +142,20 @@ static Cell** set_bombs(Game game, Cell **cells){
  * @param bombs The numbers of bombs.
  * @return true, ha sikeres volt a mentés.
  */
-void setup_cells(Game game, Cell** cells){
-    cells = (Cell**) malloc(game.y*sizeof(Cell*));
-    for(int x=0; x<game.y; x++){
+void setup_cells(Game *game, Cell** cells){
+    cells = (Cell**) malloc(game->y*sizeof(Cell*));
+
+    for(int x=0; x<game->y; x++){
         cells[x] = (Cell*) malloc(x * sizeof(Cell));
     }
 
-    for(int i=0; i<game.x; i++){
-        for(int j=0; j<game.y; j++){
+    for(int i=0; i<game->x; i++){
+        for(int j=0; j<game->y; j++){
             cells[i][j].type = simple;
             cells[i][j].shown = false;
             cells[i][j].marked = false;
         }
     }
-
 
     cells = set_bombs(game, cells);
 }

@@ -43,12 +43,12 @@ typedef struct Game
     Field field;
 } Game;
 
-int save(Game game, Cell** cells);
-Game new_game(GameMode mode, Field field);
-int load_game();
-int show(Cell **c, int x, int y);
-void mark(Cell **c, Game game);
-void game_over();
-void setup_cells(Game game, Cell** pcells);
+void save(Game *game, Cell **cells);
+void new_game(Game *game, GameMode mode, Field field);
+//int load_game();
+//int show(Cell **c, int x, int y);
+//void mark(Cell **c, Game game);
+//void game_over();
+void setup_cells(Game *game, Cell** cells);
 
 #endif
