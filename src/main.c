@@ -12,7 +12,8 @@ static void sdl_init(char const *title, int width, int height, SDL_Window **pwin
 static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu);
 static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background);
 static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background);
-static void render_field(SDL_Renderer *renderer, Game *game, double cell_size, double field_start_pixel_x, double field_start_pixel_y, SDL_Texture *fd_cell);
+static void render_field(SDL_Renderer *renderer, Game *game, Cell** cells, double cell_size, double field_start_pixel_x, double field_start_pixel_y, SDL_Texture *fd_cell);
+static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, double field_start_pixel_x, double field_start_pixel_y, double cell_size, SDL_Texture *fd_cell);
 
 
 int main(int argc, char *argv[])
@@ -60,30 +61,26 @@ static int setup_ui(Game *game, Cell **cells)
 				//INIT GAME
 				game_on = true;
 				game_view(window, &renderer, background);
-				setup_cells(game, cells);
+				cells = setup_cells(game);
 				cell_size = (720 - 2*70) / game->field;
 				field_start_pixel_x = (1280 - (720 - 2*70)) / 2;
 				field_start_pixel_y = (720 - (720 - 2*70)) / 2;
-				render_field(renderer, game, cell_size, field_start_pixel_x, field_start_pixel_y, fd_cell);
+				render_field(renderer, game, cells, cell_size, field_start_pixel_x, field_start_pixel_y, fd_cell);
 			}
 			else{
                 if(ev.type == SDL_MOUSEBUTTONDOWN)
                 {
-                    printf("bal");
-                }
-                else if(ev.type == SDL_BUTTON_RIGHT){
-                    printf("jobb");
+                    detect_game_click(renderer, ev, game, cells, field_start_pixel_x, field_start_pixel_y, cell_size, fd_cell);
                 }
 			}
 
 		}
 		if (ev.type == SDL_QUIT)
 		{
-		    /*for(int x=0; x<game->y; ++x){
-                free(cells[x]);
+		    /*for(int y=0; y<game->y; y++){
+                free(cells[y]);
 		    }*/ //TODO: This is not working
 		    free(cells);
-		    free(game);
             SDL_DestroyTexture(background);
             SDL_DestroyTexture(fd_cell);
 			SDL_DestroyRenderer(renderer);
@@ -118,15 +115,15 @@ static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
     SDL_RenderPresent(renderer);
 }
 
-static void render_field(SDL_Renderer *renderer, Game *game, double cell_size, double field_start_pixel_x, double field_start_pixel_y, SDL_Texture *fd_cell){
-    fd_cell = IMG_LoadTexture(renderer, "resources/facingDown.png");
-	if (fd_cell == NULL)
-	{
-		SDL_Log("Can not open fd_cell image: %s", IMG_GetError());
-		exit(1);
-	}
+static void render_field(SDL_Renderer *renderer, Game *game, Cell** cells, double cell_size, double field_start_pixel_x, double field_start_pixel_y, SDL_Texture *fd_cell){
 	for(int x=field_start_pixel_x; x<game->x*cell_size+field_start_pixel_x; x=x+cell_size){
         for(int y=field_start_pixel_y; y<game->y*cell_size+field_start_pixel_y; y=y+cell_size){
+            if(cells[0][0].shown==true){
+                fd_cell = IMG_LoadTexture(renderer, "resources/0.png");
+            }
+            else{
+                fd_cell = IMG_LoadTexture(renderer, "resources/facingDown.png");
+            }
             SDL_Rect fd_cell_src = {0, 0, 200, 200};
             SDL_Rect fd_cell_dest = {x, y, cell_size, cell_size};
             SDL_RenderCopy(renderer, fd_cell, &fd_cell_src, &fd_cell_dest);
@@ -160,7 +157,7 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on)
 {
 	GameMode mode = easy_mode;
-	Field field = big_field;
+	Field field = small_field;
     //TODO: DO not set to default because of loop
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 235 && ev.motion.y <= 300)
 	{
@@ -202,6 +199,21 @@ static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background,
 	}
 }
 
+static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, double field_start_pixel_x, double field_start_pixel_y, double cell_size, SDL_Texture *fd_cell){
+    if(ev.motion.x>=field_start_pixel_x && ev.motion.x<=(1280-field_start_pixel_x) && ev.motion.y>=field_start_pixel_y && ev.motion.y <=(720-field_start_pixel_y)){
+        if(ev.button.button == SDL_BUTTON_LEFT){
+            int x = (ev.motion.x-(int)field_start_pixel_x)/(int)cell_size;
+            int y = (ev.motion.y-(int)field_start_pixel_y)/(int)cell_size;
+            show(&cells, x, y);
+        }
+        else if(ev.button.button == SDL_BUTTON_RIGHT){
+            int x = (ev.motion.x-(int)field_start_pixel_x)/(int)cell_size;
+            int y = (ev.motion.y-(int)field_start_pixel_y)/(int)cell_size;
+            mark(&cells, x, y);
+        }
+        render_field(renderer, game, cells, cell_size, field_start_pixel_x, field_start_pixel_y, fd_cell);
+    }
+}
 static void sdl_init(char const *title, int width, int height, SDL_Window **pwindow)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)

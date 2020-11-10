@@ -45,10 +45,8 @@ typedef struct Game
 
 void save(Game *game, Cell **cells);
 void new_game(Game *game, GameMode mode, Field field);
-//int load_game();
-//int show(Cell **c, int x, int y);
-//void mark(Cell **c, Game game);
-//void game_over();
-void setup_cells(Game *game, Cell** cells);
+void mark(Cell ***c, int x, int y);
+void show(Cell ***c, int x, int y);
+Cell** setup_cells(Game *game);
 
 #endif
