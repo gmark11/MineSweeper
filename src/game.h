@@ -45,6 +45,6 @@ void save(Game *game, Cell **cells);
 void new_game(Game *game, GameMode mode, Field field);
 void mark(Cell ***c, int x, int y);
 void show(Cell ***c, int x, int y);
-Cell** setup_cells(Game *game);
+Cell **setup_cells(Game *game);
 
 #endif
