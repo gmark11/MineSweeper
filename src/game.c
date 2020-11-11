@@ -4,17 +4,13 @@
 #include <time.h>
 #include "game.h"
 
-/**
- * Marks the selected cell.
- * @param c A The clicked cell.
- * @return true, ha sikeres volt a mentés.
- */
 static void game_over() {}
 
 /**
- * Shows the selected cell.
- * @param c A The clicked cell.
- * @return true, ha sikeres volt a mentés.
+ * Set the shown property of the cell to true
+ * @param c Pointer of the cell
+ * @param x The X number of cell
+ * @param y The Y number of cell
  */
 void show(Cell ***c, int x, int y)
 {
@@ -22,21 +18,16 @@ void show(Cell ***c, int x, int y)
 }
 
 /**
- * Marks the selected cell.
- * @param c A The clicked cell.
- * @return true, ha sikeres volt a mentés.
+ * Set the marked property of the cell to true
+ * @param c Pointer of the cell
+ * @param x The X number of cell
+ * @param y The Y number of cell
  */
 void mark(Cell ***c, int x, int y)
 {
     (*c)[x][y].marked = true;
 }
 
-/**
- * Saves current status to a txt file.
- * @param pj A mentendő játék.
- * @param fajlnev A fájl neve, amit létrehoz.
- * @return 0, if successful save
- */
 void save(Game *game, Cell **cells)
 {
     FILE *fp = fopen("save.txt", "wt");
@@ -55,12 +46,6 @@ void save(Game *game, Cell **cells)
     fclose(fp);
 }
 
-/**
- * Elmenti a játékot egy fájlba.
- * @param pj A mentendő játék.
- * @param fajlnev A fájl neve, amit létrehoz.
- * @return true, ha sikeres volt a mentés.
- */
 /*Game load()
 {
     FILE *fp = fopen("save.txt", "rt");
@@ -74,10 +59,10 @@ void save(Game *game, Cell **cells)
 }*/
 
 /**
- * Elmenti a játékot egy fájlba.
- * @param pj A mentendő játék.
- * @param fajlnev A fájl neve, amit létrehoz.
- * @return true, ha sikeres volt a mentés.
+ * Initializes the game
+ * @param game Pointer of the game
+ * @param mode The mode of the game (enum)
+ * @param field The field size of the game (enum)
  */
 void new_game(Game *game, GameMode mode, Field field)
 {
@@ -85,6 +70,11 @@ void new_game(Game *game, GameMode mode, Field field)
     game->field = field;
 }
 
+/**
+ * Sets the bombs in the cells
+ * @param game Pointer of the game
+ * @param cells Pointer of the cells
+ */
 static void set_bombs(Game *game, Cell ***cells)
 {
     srand(time(NULL));
@@ -108,11 +98,9 @@ static void set_bombs(Game *game, Cell ***cells)
 }
 
 /**
- * Initializes the cells, based on the given settings
- * @param x Numbers of cells on the X-coordinate.
- * @param y Numbers of cells on the Y-coordinate.
- * @param bombs The numbers of bombs.
- * @return true, ha sikeres volt a mentés.
+ * Initializes the cells
+ * @param game Pointer of the game
+ * @return Cell** Dynamically allocated 2D array
  */
 Cell **setup_cells(Game *game)
 {

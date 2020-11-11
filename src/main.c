@@ -15,6 +15,12 @@ static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, double cell_size, double field_start_pixel_x, double field_start_pixel_y, SDL_Texture *cell_img);
 static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, double field_start_pixel_x, double field_start_pixel_y, double cell_size, SDL_Texture *cell_img);
 
+/**
+ * Main function
+ * @param argc Number of parameters
+ * @param argv Pointer of the array of marameters
+ * @return 0 if there is not any error
+ */
 int main(int argc, char *argv[])
 {
 	Game game;
@@ -23,6 +29,11 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+/**
+ * This function handles the whole SDL UI
+ * @param game Pointer of the game
+ * @param cells Pointer of the cells
+ */
 static void setup_ui(Game *game, Cell **cells)
 {
 	SDL_Window *window;
@@ -93,6 +104,12 @@ static void setup_ui(Game *game, Cell **cells)
 	}
 }
 
+/**
+ * This function renders the background of the game view
+ * @param window Pointer of the SDL window
+ * @param prenderer Pointer of the SDL renderer
+ * @param background Pointer of the background
+ */
 static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
@@ -116,6 +133,12 @@ static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 	SDL_RenderPresent(renderer);
 }
 
+/**
+ * This function renders the background of the game view
+ * @param window Pointer of the SDL window
+ * @param prenderer Pointer of the SDL renderer
+ * @param background Pointer of the background image
+ */
 static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, double cell_size, double field_start_pixel_x, double field_start_pixel_y, SDL_Texture *cell_img)
 {
 	for (int x = field_start_pixel_x; x < game->field * cell_size + field_start_pixel_x; x = x + cell_size)
@@ -164,6 +187,12 @@ static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, doubl
 	SDL_RenderPresent(renderer);
 }
 
+/**
+ * This function renders the background of the menu view
+ * @param window Pointer of the SDL window
+ * @param prenderer Pointer of the SDL renderer
+ * @param background Pointer of the background image
+ */
 static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
@@ -186,6 +215,14 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 	SDL_RenderPresent(renderer);
 }
 
+/**
+ * Detects clicks in the menu
+ * @param ev SDL event
+ * @param game Pointer of the game
+ * @param background Pointer of the background image
+ * @param renderer Pointer of the SDL renderer
+ * @param menu_on Pointer of a boolean which handles if the game is in the menu or not
+ */
 static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on)
 {
 	GameMode mode = easy_mode;
@@ -231,6 +268,17 @@ static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background,
 	}
 }
 
+/**
+ * Detects clicks during the game
+ * @param renderer Pointer of the SDL renderer
+ * @param ev SDL event
+ * @param game Pointer of the game
+ * @param cells Pointer of the cells
+ * @param field_start_pixel_x Starting pixel on the x-coordinate
+ * @param field_start_pixel_y Starting pixel on the y-coordinate
+ * @param cell_size The length and width of a cell in pixels
+ * @param cell_img Pointer of the image of the cell
+ */
 static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, double field_start_pixel_x, double field_start_pixel_y, double cell_size, SDL_Texture *cell_img)
 {
 	if (ev.motion.x >= field_start_pixel_x && ev.motion.x <= (1280 - field_start_pixel_x) && ev.motion.y >= field_start_pixel_y && ev.motion.y <= (720 - field_start_pixel_y))
@@ -250,6 +298,14 @@ static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, 
 		render_field(renderer, game, cells, cell_size, field_start_pixel_x, field_start_pixel_y, cell_img);
 	}
 }
+
+/**
+ * Creates the SDL window
+ * @param title Name of the window
+ * @param width Width of the window
+ * @param height Height of the window
+ * @param pwindow Pointer of the window
+ */
 static void sdl_init(char const *title, int width, int height, SDL_Window **pwindow)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
