@@ -37,8 +37,6 @@ typedef enum Field
 
 typedef struct Game
 {
-    int x;
-    int y;
     GameMode mode;
     Field field;
 } Game;

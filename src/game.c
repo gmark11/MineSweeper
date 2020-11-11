@@ -19,32 +19,6 @@ static void game_over(){}
 void show(Cell ***c, int x, int y)
 {
     (*c)[x][y].shown = true;
-    if ((*c)[x][y].type == bomb)
-    {
-        game_over();
-    }
-    else
-    {
-        switch ((*c)[x][y].type)
-        {
-        case one:
-            //
-            break;
-        case two:
-            //
-            break;
-        case three:
-            //
-            break;
-        case four:
-            //
-            break;
-        case five:
-            //
-            break;
-        }
-    }
-    return c;
 }
 
 /**
@@ -72,8 +46,8 @@ void save(Game *game, Cell **cells)
     fprintf(fp, "Game settings\n");
     fprintf(fp, "%d %d\n", game->mode, game->field);
     fprintf(fp, "Cells settings\n");
-    for(int i=0; i<game->x; i++){
-        for(int j=0; j<game->y; j++){
+    for(int i=0; i<game->field; i++){
+        for(int j=0; j<game->field; j++){
             fprintf(fp, "%d %d %d\n", cells[i][j].type, cells[i][j].shown, cells[i][j].marked);
         }
     }
@@ -109,9 +83,6 @@ void new_game(Game *game, GameMode mode, Field field)
 {
     game->mode = mode;
     game->field = field;
-
-    game->x = game->field;
-    game->y = game->field;
 }
 
 
@@ -122,8 +93,8 @@ static void set_bombs(Game *game, Cell ***cells){
 
     //TODO: Do not let it generate more than once the same num!!
     for(int i=0; i<game->mode; i++){
-        bomb_cells[i][0] = rand() % game->x;
-        bomb_cells[i][1] = rand() % game->y;
+        bomb_cells[i][0] = rand() % game->field;
+        bomb_cells[i][1] = rand() % game->field;
     }
 
     for(int i=0; i<game->mode; i++){
@@ -142,14 +113,14 @@ static void set_bombs(Game *game, Cell ***cells){
  * @return true, ha sikeres volt a mentés.
  */
 Cell** setup_cells(Game *game){
-    Cell** cells = (Cell**) malloc(game->y*sizeof(Cell*));
+    Cell** cells = (Cell**) malloc(game->field*sizeof(Cell*));
 
-    for(int y=0; y<game->y; y++){
-        cells[y] = (Cell*) malloc(game->x * sizeof(Cell));
+    for(int y=0; y<game->field; y++){
+        cells[y] = (Cell*) malloc(game->field * sizeof(Cell));
     }
 
-    for(int i=0; i<game->y; i++){
-        for(int j=0; j<game->x; j++){
+    for(int i=0; i<game->field; i++){
+        for(int j=0; j<game->field; j++){
             cells[i][j].type = simple;
             cells[i][j].shown = false;
             cells[i][j].marked = false;
