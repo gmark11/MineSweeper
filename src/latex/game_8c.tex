@@ -1,0 +1,101 @@
+\hypertarget{game_8c}{}\doxysection{game.\+c File Reference}
+\label{game_8c}\index{game.c@{game.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}game.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{game_8c_a3939a70aa95f21f13039b7c9d8db17b9}\label{game_8c_a3939a70aa95f21f13039b7c9d8db17b9}} 
+static void {\bfseries game\+\_\+over} ()
+\item 
+void \mbox{\hyperlink{game_8c_a9d378543707cabf631960d177de9040f}{show}} (\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$$\ast$c, int x, int y)
+\item 
+void \mbox{\hyperlink{game_8c_aeee4061d61d363db80d00f74b8e0814b}{mark}} (\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$$\ast$c, int x, int y)
+\item 
+\mbox{\Hypertarget{game_8c_a095c9eeabf65977f92db51ce1443cec2}\label{game_8c_a095c9eeabf65977f92db51ce1443cec2}} 
+void {\bfseries save} (\mbox{\hyperlink{struct_game}{Game}} $\ast$game, \mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$cells)
+\item 
+void \mbox{\hyperlink{game_8c_a7d243da95e8467a1930910099a8d9ff0}{new\+\_\+game}} (\mbox{\hyperlink{struct_game}{Game}} $\ast$game, Game\+Mode mode, Field field)
+\item 
+static void \mbox{\hyperlink{game_8c_a68d0feb6a241099fee80c9f22a8dd408}{set\+\_\+bombs}} (\mbox{\hyperlink{struct_game}{Game}} $\ast$game, \mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$$\ast$cells)
+\item 
+\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$ \mbox{\hyperlink{game_8c_ae540c00d5108b9a552b9589a3a76d7aa}{setup\+\_\+cells}} (\mbox{\hyperlink{struct_game}{Game}} $\ast$game)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{game_8c_aeee4061d61d363db80d00f74b8e0814b}\label{game_8c_aeee4061d61d363db80d00f74b8e0814b}} 
+\index{game.c@{game.c}!mark@{mark}}
+\index{mark@{mark}!game.c@{game.c}}
+\doxysubsubsection{\texorpdfstring{mark()}{mark()}}
+{\footnotesize\ttfamily void mark (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$$\ast$}]{c,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+Set the marked property of the cell to true 
+\begin{DoxyParams}{Parameters}
+{\em c} & Pointer of the cell \\
+\hline
+{\em x} & The X number of cell \\
+\hline
+{\em y} & The Y number of cell \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{game_8c_a7d243da95e8467a1930910099a8d9ff0}\label{game_8c_a7d243da95e8467a1930910099a8d9ff0}} 
+\index{game.c@{game.c}!new\_game@{new\_game}}
+\index{new\_game@{new\_game}!game.c@{game.c}}
+\doxysubsubsection{\texorpdfstring{new\_game()}{new\_game()}}
+{\footnotesize\ttfamily void new\+\_\+game (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game,  }\item[{Game\+Mode}]{mode,  }\item[{Field}]{field }\end{DoxyParamCaption})}
+
+Initializes the game 
+\begin{DoxyParams}{Parameters}
+{\em game} & Pointer of the game \\
+\hline
+{\em mode} & The mode of the game (enum) \\
+\hline
+{\em field} & The field size of the game (enum) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{game_8c_a68d0feb6a241099fee80c9f22a8dd408}\label{game_8c_a68d0feb6a241099fee80c9f22a8dd408}} 
+\index{game.c@{game.c}!set\_bombs@{set\_bombs}}
+\index{set\_bombs@{set\_bombs}!game.c@{game.c}}
+\doxysubsubsection{\texorpdfstring{set\_bombs()}{set\_bombs()}}
+{\footnotesize\ttfamily static void set\+\_\+bombs (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game,  }\item[{\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$$\ast$}]{cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Sets the bombs in the cells 
+\begin{DoxyParams}{Parameters}
+{\em game} & Pointer of the game \\
+\hline
+{\em cells} & Pointer of the cells \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{game_8c_ae540c00d5108b9a552b9589a3a76d7aa}\label{game_8c_ae540c00d5108b9a552b9589a3a76d7aa}} 
+\index{game.c@{game.c}!setup\_cells@{setup\_cells}}
+\index{setup\_cells@{setup\_cells}!game.c@{game.c}}
+\doxysubsubsection{\texorpdfstring{setup\_cells()}{setup\_cells()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_cell}{Cell}}$\ast$$\ast$ setup\+\_\+cells (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game }\end{DoxyParamCaption})}
+
+Initializes the cells 
+\begin{DoxyParams}{Parameters}
+{\em game} & Pointer of the game \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cell$\ast$$\ast$ Dynamically allocated 2D array 
+\end{DoxyReturn}
+\mbox{\Hypertarget{game_8c_a9d378543707cabf631960d177de9040f}\label{game_8c_a9d378543707cabf631960d177de9040f}} 
+\index{game.c@{game.c}!show@{show}}
+\index{show@{show}!game.c@{game.c}}
+\doxysubsubsection{\texorpdfstring{show()}{show()}}
+{\footnotesize\ttfamily void show (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$$\ast$}]{c,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+Set the shown property of the cell to true 
+\begin{DoxyParams}{Parameters}
+{\em c} & Pointer of the cell \\
+\hline
+{\em x} & The X number of cell \\
+\hline
+{\em y} & The Y number of cell \\
+\hline
+\end{DoxyParams}

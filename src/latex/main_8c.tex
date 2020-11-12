@@ -1,0 +1,167 @@
+\hypertarget{main_8c}{}\doxysection{main.\+c File Reference}
+\label{main_8c}\index{main.c@{main.c}}
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+image.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L2\+\_\+gfx\+Primitives.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}game.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{main_8c_a661ea21ac1852204c27595c1d70b5471}{setup\+\_\+ui}} (\mbox{\hyperlink{struct_game}{Game}} $\ast$game, \mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$cells)
+\item 
+static void \mbox{\hyperlink{main_8c_a9d3bdaab018e06c6a7a8849512d18608}{sdl\+\_\+init}} (char const $\ast$title, int width, int height, S\+D\+L\+\_\+\+Window $\ast$$\ast$pwindow)
+\item 
+static void \mbox{\hyperlink{main_8c_a45191207e281882f4068f8518f019793}{detect\+\_\+menu\+\_\+click}} (S\+D\+L\+\_\+\+Event ev, \mbox{\hyperlink{struct_game}{Game}} $\ast$game, S\+D\+L\+\_\+\+Texture $\ast$background, S\+D\+L\+\_\+\+Renderer $\ast$renderer, bool $\ast$menu)
+\item 
+static void \mbox{\hyperlink{main_8c_a3cc54ad86afe89de943862199617334b}{menu\+\_\+view}} (S\+D\+L\+\_\+\+Window $\ast$window, S\+D\+L\+\_\+\+Renderer $\ast$$\ast$prenderer, S\+D\+L\+\_\+\+Texture $\ast$background)
+\item 
+static void \mbox{\hyperlink{main_8c_aa2054ab6c1ac103dc0670b291ad7a278}{game\+\_\+view}} (S\+D\+L\+\_\+\+Window $\ast$window, S\+D\+L\+\_\+\+Renderer $\ast$$\ast$prenderer, S\+D\+L\+\_\+\+Texture $\ast$background)
+\item 
+static void \mbox{\hyperlink{main_8c_aebb0993fc9dd214bd516f9095610e47c}{render\+\_\+field}} (S\+D\+L\+\_\+\+Renderer $\ast$renderer, \mbox{\hyperlink{struct_game}{Game}} $\ast$game, \mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$cells, double cell\+\_\+size, double field\+\_\+start\+\_\+pixel\+\_\+x, double field\+\_\+start\+\_\+pixel\+\_\+y, S\+D\+L\+\_\+\+Texture $\ast$cell\+\_\+img)
+\item 
+static void \mbox{\hyperlink{main_8c_acdbc1db87c4ade6ece886a889d7b25dc}{detect\+\_\+game\+\_\+click}} (S\+D\+L\+\_\+\+Renderer $\ast$renderer, S\+D\+L\+\_\+\+Event ev, \mbox{\hyperlink{struct_game}{Game}} $\ast$game, \mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$cells, double field\+\_\+start\+\_\+pixel\+\_\+x, double field\+\_\+start\+\_\+pixel\+\_\+y, double cell\+\_\+size, S\+D\+L\+\_\+\+Texture $\ast$cell\+\_\+img)
+\item 
+int \mbox{\hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8c_acdbc1db87c4ade6ece886a889d7b25dc}\label{main_8c_acdbc1db87c4ade6ece886a889d7b25dc}} 
+\index{main.c@{main.c}!detect\_game\_click@{detect\_game\_click}}
+\index{detect\_game\_click@{detect\_game\_click}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{detect\_game\_click()}{detect\_game\_click()}}
+{\footnotesize\ttfamily static void detect\+\_\+game\+\_\+click (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Renderer $\ast$}]{renderer,  }\item[{S\+D\+L\+\_\+\+Event}]{ev,  }\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game,  }\item[{\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$}]{cells,  }\item[{double}]{field\+\_\+start\+\_\+pixel\+\_\+x,  }\item[{double}]{field\+\_\+start\+\_\+pixel\+\_\+y,  }\item[{double}]{cell\+\_\+size,  }\item[{S\+D\+L\+\_\+\+Texture $\ast$}]{cell\+\_\+img }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Detects clicks during the game 
+\begin{DoxyParams}{Parameters}
+{\em renderer} & Pointer of the S\+DL renderer \\
+\hline
+{\em ev} & S\+DL event \\
+\hline
+{\em game} & Pointer of the game \\
+\hline
+{\em cells} & Pointer of the cells \\
+\hline
+{\em field\+\_\+start\+\_\+pixel\+\_\+x} & Starting pixel on the x-\/coordinate \\
+\hline
+{\em field\+\_\+start\+\_\+pixel\+\_\+y} & Starting pixel on the y-\/coordinate \\
+\hline
+{\em cell\+\_\+size} & The length and width of a cell in pixels \\
+\hline
+{\em cell\+\_\+img} & Pointer of the image of the cell \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_a45191207e281882f4068f8518f019793}\label{main_8c_a45191207e281882f4068f8518f019793}} 
+\index{main.c@{main.c}!detect\_menu\_click@{detect\_menu\_click}}
+\index{detect\_menu\_click@{detect\_menu\_click}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{detect\_menu\_click()}{detect\_menu\_click()}}
+{\footnotesize\ttfamily static void detect\+\_\+menu\+\_\+click (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Event}]{ev,  }\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game,  }\item[{S\+D\+L\+\_\+\+Texture $\ast$}]{background,  }\item[{S\+D\+L\+\_\+\+Renderer $\ast$}]{renderer,  }\item[{bool $\ast$}]{menu\+\_\+on }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Detects clicks in the menu 
+\begin{DoxyParams}{Parameters}
+{\em ev} & S\+DL event \\
+\hline
+{\em game} & Pointer of the game \\
+\hline
+{\em background} & Pointer of the background image \\
+\hline
+{\em renderer} & Pointer of the S\+DL renderer \\
+\hline
+{\em menu\+\_\+on} & Pointer of a boolean which handles if the game is in the menu or not \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_aa2054ab6c1ac103dc0670b291ad7a278}\label{main_8c_aa2054ab6c1ac103dc0670b291ad7a278}} 
+\index{main.c@{main.c}!game\_view@{game\_view}}
+\index{game\_view@{game\_view}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{game\_view()}{game\_view()}}
+{\footnotesize\ttfamily static void game\+\_\+view (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Window $\ast$}]{window,  }\item[{S\+D\+L\+\_\+\+Renderer $\ast$$\ast$}]{prenderer,  }\item[{S\+D\+L\+\_\+\+Texture $\ast$}]{background }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+This function renders the background of the game view 
+\begin{DoxyParams}{Parameters}
+{\em window} & Pointer of the S\+DL window \\
+\hline
+{\em prenderer} & Pointer of the S\+DL renderer \\
+\hline
+{\em background} & Pointer of the background \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{main_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Main function 
+\begin{DoxyParams}{Parameters}
+{\em argc} & Number of parameters \\
+\hline
+{\em argv} & Pointer of the array of marameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if there is not any error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{main_8c_a3cc54ad86afe89de943862199617334b}\label{main_8c_a3cc54ad86afe89de943862199617334b}} 
+\index{main.c@{main.c}!menu\_view@{menu\_view}}
+\index{menu\_view@{menu\_view}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{menu\_view()}{menu\_view()}}
+{\footnotesize\ttfamily static void menu\+\_\+view (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Window $\ast$}]{window,  }\item[{S\+D\+L\+\_\+\+Renderer $\ast$$\ast$}]{prenderer,  }\item[{S\+D\+L\+\_\+\+Texture $\ast$}]{background }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+This function renders the background of the menu view 
+\begin{DoxyParams}{Parameters}
+{\em window} & Pointer of the S\+DL window \\
+\hline
+{\em prenderer} & Pointer of the S\+DL renderer \\
+\hline
+{\em background} & Pointer of the background image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_aebb0993fc9dd214bd516f9095610e47c}\label{main_8c_aebb0993fc9dd214bd516f9095610e47c}} 
+\index{main.c@{main.c}!render\_field@{render\_field}}
+\index{render\_field@{render\_field}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{render\_field()}{render\_field()}}
+{\footnotesize\ttfamily static void render\+\_\+field (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Renderer $\ast$}]{renderer,  }\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game,  }\item[{\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$}]{cells,  }\item[{double}]{cell\+\_\+size,  }\item[{double}]{field\+\_\+start\+\_\+pixel\+\_\+x,  }\item[{double}]{field\+\_\+start\+\_\+pixel\+\_\+y,  }\item[{S\+D\+L\+\_\+\+Texture $\ast$}]{cell\+\_\+img }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+This function renders the background of the game view 
+\begin{DoxyParams}{Parameters}
+{\em window} & Pointer of the S\+DL window \\
+\hline
+{\em prenderer} & Pointer of the S\+DL renderer \\
+\hline
+{\em background} & Pointer of the background image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_a9d3bdaab018e06c6a7a8849512d18608}\label{main_8c_a9d3bdaab018e06c6a7a8849512d18608}} 
+\index{main.c@{main.c}!sdl\_init@{sdl\_init}}
+\index{sdl\_init@{sdl\_init}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{sdl\_init()}{sdl\_init()}}
+{\footnotesize\ttfamily static void sdl\+\_\+init (\begin{DoxyParamCaption}\item[{char const $\ast$}]{title,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{S\+D\+L\+\_\+\+Window $\ast$$\ast$}]{pwindow }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Creates the S\+DL window 
+\begin{DoxyParams}{Parameters}
+{\em title} & Name of the window \\
+\hline
+{\em width} & Width of the window \\
+\hline
+{\em height} & Height of the window \\
+\hline
+{\em pwindow} & Pointer of the window \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_a661ea21ac1852204c27595c1d70b5471}\label{main_8c_a661ea21ac1852204c27595c1d70b5471}} 
+\index{main.c@{main.c}!setup\_ui@{setup\_ui}}
+\index{setup\_ui@{setup\_ui}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{setup\_ui()}{setup\_ui()}}
+{\footnotesize\ttfamily static void setup\+\_\+ui (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_game}{Game}} $\ast$}]{game,  }\item[{\mbox{\hyperlink{struct_cell}{Cell}} $\ast$$\ast$}]{cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+This function handles the whole S\+DL UI 
+\begin{DoxyParams}{Parameters}
+{\em game} & Pointer of the game \\
+\hline
+{\em cells} & Pointer of the cells \\
+\hline
+\end{DoxyParams}
