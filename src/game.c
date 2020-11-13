@@ -1,4 +1,3 @@
-/// @file game.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -7,23 +6,11 @@
 
 static void game_over() {}
 
-/**
- * Set the shown property of the cell to true
- * @param c Pointer of the cell
- * @param x The X number of cell
- * @param y The Y number of cell
- */
 void show(Cell ***c, int x, int y)
 {
     (*c)[x][y].shown = true;
 }
 
-/**
- * Set the marked property of the cell to true
- * @param c Pointer of the cell
- * @param x The X number of cell
- * @param y The Y number of cell
- */
 void mark(Cell ***c, int x, int y)
 {
     (*c)[x][y].marked = true;
@@ -59,23 +46,12 @@ void save(Game *game, Cell **cells)
     fclose(fp);
 }*/
 
-/**
- * Initializes the game
- * @param game Pointer of the game
- * @param mode The mode of the game (enum)
- * @param field The field size of the game (enum)
- */
 void new_game(Game *game, GameMode mode, Field field)
 {
     game->mode = mode;
     game->field = field;
 }
 
-/**
- * Sets the bombs in the cells
- * @param game Pointer of the game
- * @param cells Pointer of the cells
- */
 static void set_bombs(Game *game, Cell ***cells)
 {
     srand(time(NULL));
@@ -98,11 +74,6 @@ static void set_bombs(Game *game, Cell ***cells)
     //TODO: Set cell types
 }
 
-/**
- * Initializes the cells
- * @param game Pointer of the game
- * @return Cell** Dynamically allocated 2D array
- */
 Cell **setup_cells(Game *game)
 {
     Cell **cells = (Cell **)malloc(game->field * sizeof(Cell *));
