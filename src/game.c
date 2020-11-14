@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <unistd.h>
 #include "game.h"
+
 
 static void game_over() {}
 
@@ -16,35 +18,67 @@ void mark(Cell ***c, int x, int y)
     (*c)[x][y].marked = true;
 }
 
-void save(Game *game, Cell **cells)
+void save(Game *game, Cell ***cells)
 {
     FILE *fp = fopen("save.txt", "wt");
-    fprintf(fp, "MineSweeper Save\n");
-    fprintf(fp, "Game settings\n");
+    //Game settings
     fprintf(fp, "%d %d\n", game->mode, game->field);
-    fprintf(fp, "Cells settings\n");
+    //Map settings
     for (int i = 0; i < game->field; i++)
     {
         for (int j = 0; j < game->field; j++)
         {
-            fprintf(fp, "%d %d %d\n", cells[i][j].type, cells[i][j].shown, cells[i][j].marked);
+            fprintf(fp, "%d %d %d\n", (*cells)[i][j].type, (*cells)[i][j].shown, (*cells)[i][j].marked);
         }
     }
-    //time
+    //TODO: time
     fclose(fp);
 }
 
-/*Game load()
+bool load(Game *game, Cell ***cells)
 {
-    FILE *fp = fopen("save.txt", "rt");
-    //Map settings
-    Game game;
-    game.mode =
-    game.field =
+    int num;
+    char new_line;
 
-    //time
-    fclose(fp);
-}*/
+    if(access("save.txt", F_OK) != -1){
+        FILE *fp = fopen("save.txt", "rt");
+        //Game settings
+        fscanf(fp, "%d", &num);
+        game->mode = num;
+        fscanf(fp, "%c", &new_line); //new line char
+
+        fscanf(fp, "%d", &num);
+        game->field = num;
+        fscanf(fp, "%c", &new_line); //new line char
+
+        (*cells) = setup_cells(game); //allocate memory with default settings
+
+        //Map settings
+        for (int i = 0; i < game->field; i++)
+        {
+            for (int j = 0; j < game->field; j++)
+            {
+                fscanf(fp, "%d", &num);
+                (*cells)[i][j].type = num;
+
+                fscanf(fp, "%d", &num);
+                (*cells)[i][j].shown = num;
+
+                fscanf(fp, "%d", &num);
+                (*cells)[i][j].marked = num;
+
+                fscanf(fp, "%c", &new_line); //new line char
+            }
+        }
+        //TODO: time
+        fclose(fp);
+        remove("save.txt");
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 void new_game(Game *game, GameMode mode, Field field)
 {
@@ -69,9 +103,6 @@ static void set_bombs(Game *game, Cell ***cells)
     {
         (*cells)[bomb_cells[i][0]][bomb_cells[i][1]].type = bomb;
     }
-
-    //TODO: Search and set cell
-    //TODO: Set cell types
 }
 
 Cell **setup_cells(Game *game)

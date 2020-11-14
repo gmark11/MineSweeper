@@ -28,16 +28,23 @@ static void setup_ui(Game *game, Cell **cells)
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	SDL_Texture *background, *cell_img;
-	bool menu_on;
-	bool game_on;
+	bool menu_on, game_on, loaded;
 
 	//WINDOW SETUP
 	sdl_init("MineSweeper", 1280, 720, &window);
 
-	//INIT START MENU
-	menu_on = true;
-	game_on = false;
-	menu_view(window, &renderer, background);
+	//CHECK IF SAVED
+	if(load(game, &cells)==true){
+        menu_on = false;
+        game_on = false;
+        loaded = true;
+	}
+	else{
+        menu_on = true;
+        game_on = false;
+        loaded = false;
+        menu_view(window, &renderer, background);
+	}
 
 	//EVENT CONTROLLER
 	SDL_Event ev;
@@ -61,8 +68,10 @@ static void setup_ui(Game *game, Cell **cells)
 			{
 				//INIT GAME
 				game_on = true;
+				if(loaded == false){
+                    cells = setup_cells(game);
+				}
 				game_view(window, &renderer, background);
-				cells = setup_cells(game);
 				cell_size = (720 - 2 * 70) / game->field;
 				field_start_pixel_x = (1280 - (720 - 2 * 70)) / 2;
 				field_start_pixel_y = (720 - (720 - 2 * 70)) / 2;
@@ -79,6 +88,7 @@ static void setup_ui(Game *game, Cell **cells)
 		//QUIT
 		if (ev.type == SDL_QUIT)
 		{
+		    save(game, &cells);
 			for (int y = 0; y < game->field; y++)
 			{
 				free(cells[y]);
@@ -188,9 +198,8 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 
 static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on)
 {
-	GameMode mode = easy_mode;
-	Field field = small_field; //TODO: DO not set to default because of loop
-							   //FIELD SIZE
+    GameMode mode = easy_mode;
+    Field field = small_field;
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 235 && ev.motion.y <= 300)
 	{
 		field = small_field;
