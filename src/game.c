@@ -24,12 +24,12 @@ void show(Game *game, Cell ***cells, int x, int y)
         return;
     if((*cells)[x][y].marked==true)
         return;
-    if((*cells)[x][y].type ==bomb){
+    if((*cells)[x][y].type == bomb){
         game_over(game, cells);
     }
     else{
         (*cells)[x][y].shown = true;
-        if((*cells)[x][y].type = simple){
+        if((*cells)[x][y].type == simple){
             show(game, cells, x-1, y);
             show(game, cells, x, y-1);
             show(game, cells, x, y+1);
@@ -117,6 +117,8 @@ static void set_type(Game *game, Cell ***cells, int x, int y){
     if(y < 0 || y >= game->field)
         return;
     if((*cells)[x][y].type==bomb)
+        return;
+    if((*cells)[x][y].type==three)
         return;
 
     (*cells)[x][y].type++;

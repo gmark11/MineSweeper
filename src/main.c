@@ -8,14 +8,6 @@
 #include "game.h"
 #include "main.h"
 
-static void setup_ui(Game *game, Cell **cells);
-static void sdl_init(char const *title, int width, int height, SDL_Window **pwindow);
-static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu);
-static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background);
-static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background);
-static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img);
-static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img);
-
 int main(int argc, char *argv[])
 {
 	Game game;
@@ -64,7 +56,7 @@ static void setup_ui(Game *game, Cell **cells)
 		//GAME CONTROLLER
 		if (menu_on == false)
 		{
-			FieldPixelSetting *fpd;
+			FieldPixelSetting fpd;
 			if (game_on == false)
 			{
 				//INIT GAME
@@ -74,16 +66,16 @@ static void setup_ui(Game *game, Cell **cells)
 					cells = setup_cells(game);
 				}
 				game_view(window, &renderer, background);
-				fpd->cell_size = (720 - 2 * 70) / game->field;
-				fpd->field_start_pixel_x = (1280 - (720 - 2 * 70)) / 2;
-				fpd->field_start_pixel_y = (720 - (720 - 2 * 70)) / 2;
-				render_field(renderer, game, cells, fpd, cell_img);
+				fpd.cell_size = (720 - 2 * 70) / game->field;
+				fpd.field_start_pixel_x = (1280 - (720 - 2 * 70)) / 2;
+				fpd.field_start_pixel_y = (720 - (720 - 2 * 70)) / 2;
+				render_field(renderer, game, cells, &fpd, cell_img);
 			}
 			else
 			{
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
-					detect_game_click(renderer, ev, game, cells, fpd, cell_img);
+					detect_game_click(renderer, ev, game, cells, &fpd, cell_img);
 				}
 			}
 		}
@@ -197,8 +189,8 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 
 static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on)
 {
-	GameMode mode = medium_mode; //TODO
-	Field field = big_field;
+	GameMode mode = hard_mode; //TODO
+	Field field = medium_field;
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 235 && ev.motion.y <= 300)
 	{
 		field = small_field;
