@@ -22,16 +22,19 @@ void show(Game *game, Cell ***cells, int x, int y)
         return;
     if((*cells)[x][y].shown==true)
         return;
-
+    if((*cells)[x][y].marked==true)
+        return;
     if((*cells)[x][y].type ==bomb){
         game_over(game, cells);
     }
     else{
         (*cells)[x][y].shown = true;
-        show(game, cells, x-1, y);
-        show(game, cells, x, y-1);
-        show(game, cells, x, y+1);
-        show(game, cells, x+1, y);
+        if((*cells)[x][y].type = simple){
+            show(game, cells, x-1, y);
+            show(game, cells, x, y-1);
+            show(game, cells, x, y+1);
+            show(game, cells, x+1, y);
+        }
     }
 }
 

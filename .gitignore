@@ -59,6 +59,7 @@ cmake-build-debug/
 *.depend
 *.layout
 .idea/
+save.txt
 
 # User-specific stuff
 .idea/**/workspace.xml

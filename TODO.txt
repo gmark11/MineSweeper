@@ -1,5 +1,5 @@
 -Numbers on cells ++++
--Automatic area unlock ----
+-Automatic area unlock ++++
 -Game over (if the chosen cell is a bomb) --> Do not save
 -Win (if only bombs remained) --> Do not save
 -Timer
