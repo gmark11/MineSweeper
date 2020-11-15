@@ -34,16 +34,18 @@ static void setup_ui(Game *game, Cell **cells)
 	sdl_init("MineSweeper", 1280, 720, &window);
 
 	//CHECK IF SAVED
-	if(load(game, &cells)==true){
-        menu_on = false;
-        game_on = false;
-        loaded = true;
+	if (load(game, &cells) == true)
+	{
+		menu_on = false;
+		game_on = false;
+		loaded = true;
 	}
-	else{
-        menu_on = true;
-        game_on = false;
-        loaded = false;
-        menu_view(window, &renderer, background);
+	else
+	{
+		menu_on = true;
+		game_on = false;
+		loaded = false;
+		menu_view(window, &renderer, background);
 	}
 
 	//EVENT CONTROLLER
@@ -68,8 +70,9 @@ static void setup_ui(Game *game, Cell **cells)
 			{
 				//INIT GAME
 				game_on = true;
-				if(loaded == false){
-                    cells = setup_cells(game);
+				if (loaded == false)
+				{
+					cells = setup_cells(game);
 				}
 				game_view(window, &renderer, background);
 				cell_size = (720 - 2 * 70) / game->field;
@@ -88,7 +91,7 @@ static void setup_ui(Game *game, Cell **cells)
 		//QUIT
 		if (ev.type == SDL_QUIT)
 		{
-		    save(game, &cells);
+			save(game, &cells);
 			for (int y = 0; y < game->field; y++)
 			{
 				free(cells[y]);
@@ -150,11 +153,8 @@ static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, doubl
 				case three:
 					cell_img = IMG_LoadTexture(renderer, "resources/3.png");
 					break;
-				case four:
-					cell_img = IMG_LoadTexture(renderer, "resources/4.png");
-					break;
-				case five:
-					cell_img = IMG_LoadTexture(renderer, "resources/5.png");
+				case bomb:
+					cell_img = IMG_LoadTexture(renderer, "resources/bomb.png");
 					break;
 				}
 			}
@@ -198,8 +198,8 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 
 static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on)
 {
-    GameMode mode = easy_mode;
-    Field field = small_field;
+	GameMode mode = medium_mode; //TODO
+	Field field = big_field;
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 235 && ev.motion.y <= 300)
 	{
 		field = small_field;
@@ -248,7 +248,7 @@ static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, 
 		{
 			int x = (ev.motion.x - (int)field_start_pixel_x) / (int)cell_size;
 			int y = (ev.motion.y - (int)field_start_pixel_y) / (int)cell_size;
-			show(&cells, x, y);
+			show(game, &cells, x, y);
 		}
 		else if (ev.button.button == SDL_BUTTON_RIGHT)
 		{

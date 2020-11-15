@@ -9,8 +9,6 @@ typedef enum CellType
     one,
     two,
     three,
-    four,
-    five,
     bomb
 } CellType;
 
@@ -44,8 +42,8 @@ typedef struct Game
 void save(Game *game, Cell ***cells);
 bool load(Game *game, Cell ***cells);
 void new_game(Game *game, GameMode mode, Field field);
-void mark(Cell ***c, int x, int y);
-void show(Cell ***c, int x, int y);
+void mark(Cell ***cells, int x, int y);
+void show(Game *game, Cell ***cells, int x, int y);
 Cell **setup_cells(Game *game);
 
 #endif

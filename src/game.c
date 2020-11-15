@@ -6,16 +6,38 @@
 #include "game.h"
 
 
-static void game_over() {}
-
-void show(Cell ***c, int x, int y)
-{
-    (*c)[x][y].shown = true;
+static void game_over(Game *game, Cell ***cells){
+    for(int x=0; x<game->field; x++){
+        for(int y=0; y<game->field; y++){
+            (*cells)[x][y].shown = true;
+        }
+    }
 }
 
-void mark(Cell ***c, int x, int y)
+void show(Game *game, Cell ***cells, int x, int y)
 {
-    (*c)[x][y].marked = true;
+    if(x < 0 || x >= game->field)
+        return;
+    if(y < 0 || y >= game->field)
+        return;
+    if((*cells)[x][y].shown==true)
+        return;
+
+    if((*cells)[x][y].type ==bomb){
+        game_over(game, cells);
+    }
+    else{
+        (*cells)[x][y].shown = true;
+        show(game, cells, x-1, y);
+        show(game, cells, x, y-1);
+        show(game, cells, x, y+1);
+        show(game, cells, x+1, y);
+    }
+}
+
+void mark(Cell ***cells, int x, int y)
+{
+    (*cells)[x][y].marked = true;
 }
 
 void save(Game *game, Cell ***cells)
@@ -86,22 +108,40 @@ void new_game(Game *game, GameMode mode, Field field)
     game->field = field;
 }
 
+static void set_type(Game *game, Cell ***cells, int x, int y){
+    if(x < 0 || x >= game->field)
+        return;
+    if(y < 0 || y >= game->field)
+        return;
+    if((*cells)[x][y].type==bomb)
+        return;
+
+    (*cells)[x][y].type++;
+}
+
 static void set_bombs(Game *game, Cell ***cells)
 {
     srand(time(NULL));
 
-    int bomb_cells[game->mode][2];
+    int x, y, n;
 
-    //TODO: Do not let it generate more than once the same num!!
-    for (int i = 0; i < game->mode; i++)
-    {
-        bomb_cells[i][0] = rand() % game->field;
-        bomb_cells[i][1] = rand() % game->field;
-    }
+    n = 0;
+    while(n < game->mode){
+        x = rand() % game->field;
+        y = rand() % game->field;
 
-    for (int i = 0; i < game->mode; i++)
-    {
-        (*cells)[bomb_cells[i][0]][bomb_cells[i][1]].type = bomb;
+        if((*cells)[x][y].type != bomb){
+            (*cells)[x][y].type = bomb;
+            set_type(game, cells, x-1, y-1);
+            set_type(game, cells, x-1, y);
+            set_type(game, cells, x-1, y+1);
+            set_type(game, cells, x, y-1);
+            set_type(game, cells, x, y+1);
+            set_type(game, cells, x+1, y-1);
+            set_type(game, cells, x+1, y);
+            set_type(game, cells, x+1, y+1);
+            n++;
+        }
     }
 }
 
