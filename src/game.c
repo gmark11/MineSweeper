@@ -36,12 +36,14 @@ static void check_win(Game *game, Cell ***cells)
     {
         for (int y = 0; y < game->field; y++)
         {
-            if((*cells)[x][y].shown == true){
+            if ((*cells)[x][y].shown == true)
+            {
                 active++;
             }
         }
     }
-    if(active==game->mode){
+    if (active == game->mode)
+    {
         set_status(win);
     }
 }
