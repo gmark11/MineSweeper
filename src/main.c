@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include "game.h"
 #include "main.h"
 
@@ -49,9 +50,7 @@ static void setup_ui(Game *game, Cell **cells)
 		if (menu_on == true)
 		{
 			if (ev.type == SDL_MOUSEBUTTONDOWN)
-			{
 				detect_menu_click(ev, game, background, renderer, &menu_on);
-			}
 		}
 		//GAME CONTROLLER
 		if (menu_on == false)
@@ -62,9 +61,7 @@ static void setup_ui(Game *game, Cell **cells)
 				//INIT GAME
 				game_on = true;
 				if (loaded == false)
-				{
 					cells = setup_cells(game);
-				}
 				game_view(window, &renderer, background);
 				fpd.cell_size = (720 - 2 * 70) / game->field;
 				fpd.field_start_pixel_x = (1280 - (720 - 2 * 70)) / 2;
@@ -73,28 +70,41 @@ static void setup_ui(Game *game, Cell **cells)
 			}
 			else
 			{
-				if (ev.type == SDL_MOUSEBUTTONDOWN)
+				if (get_status() != ingame)
 				{
-					detect_game_click(renderer, ev, game, cells, &fpd, cell_img);
+                    sleep(5); //TODO: not 100%, this is the best method
+                    //TODO: TEXT
+					menu_on = true;
+					game_on = false;
+					loaded = false;
+					free_and_destroy(cells, game, renderer, window, background, cell_img);
+					set_status(ingame);
+					menu_view(window, &renderer, background);
 				}
+				if(ev.type == SDL_MOUSEBUTTONDOWN)
+                    detect_game_click(renderer, ev, game, cells, &fpd, cell_img);
 			}
 		}
 		//QUIT
 		if (ev.type == SDL_QUIT)
 		{
-			save(game, &cells);
-			for (int y = 0; y < game->field; y++)
-			{
-				free(cells[y]);
-			}
-			free(cells);
-			SDL_DestroyTexture(background);
-			SDL_DestroyTexture(cell_img);
-			SDL_DestroyRenderer(renderer);
+			if (get_status() == ingame && game_on == true)
+				save(game, &cells);
+			free_and_destroy(cells, game, renderer, window, background, cell_img);
 			SDL_DestroyWindow(window);
 			SDL_Quit();
 		}
 	}
+}
+
+static void free_and_destroy(Cell **cells, Game *game, SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img)
+{
+	for (int y = 0; y < game->field; y++)
+		free(cells[y]);
+	free(cells);
+	SDL_DestroyTexture(background);
+	SDL_DestroyTexture(cell_img);
+	SDL_DestroyRenderer(renderer);
 }
 
 static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
@@ -150,13 +160,9 @@ static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, Field
 				}
 			}
 			else if (cells[index_x][index_y].marked == true)
-			{
 				cell_img = IMG_LoadTexture(renderer, "resources/marked.png");
-			}
 			else
-			{
 				cell_img = IMG_LoadTexture(renderer, "resources/facingDown.png");
-			}
 			SDL_Rect fd_cell_src = {0, 0, 200, 200};
 			SDL_Rect fd_cell_dest = {x, y, fpd->cell_size, fpd->cell_size};
 			SDL_RenderCopy(renderer, cell_img, &fd_cell_src, &fd_cell_dest);
@@ -192,35 +198,23 @@ static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background,
 	GameMode mode = hard_mode; //TODO
 	Field field = medium_field;
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 235 && ev.motion.y <= 300)
-	{
 		field = small_field;
-	}
 
 	if (ev.motion.x >= 485 && ev.motion.x <= 795 && ev.motion.y >= 235 && ev.motion.y <= 300)
-	{
 		field = medium_field;
-	}
 
 	if (ev.motion.x >= 810 && ev.motion.x <= 1120 && ev.motion.y >= 235 && ev.motion.y <= 300)
-	{
 		field = big_field;
-	}
 
 	//GAME MODE
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 325 && ev.motion.y <= 390)
-	{
 		mode = easy_mode;
-	}
 
 	if (ev.motion.x >= 485 && ev.motion.x <= 795 && ev.motion.y >= 325 && ev.motion.y <= 390)
-	{
 		mode = medium_mode;
-	}
 
 	if (ev.motion.x >= 810 && ev.motion.x <= 1120 && ev.motion.y >= 325 && ev.motion.y <= 390)
-	{
 		mode = hard_mode;
-	}
 	//START BUTTON
 	if (ev.motion.x >= 485 && ev.motion.x <= 800 && ev.motion.y >= 460 && ev.motion.y <= 560)
 	{

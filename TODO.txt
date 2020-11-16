@@ -1,7 +1,7 @@
 -Numbers on cells ++++
 -Automatic area unlock ++++
--Game over (if the chosen cell is a bomb) --> Do not save
--Win (if only bombs remained) --> Do not save
+-Game over (if the chosen cell is a bomb) --> Do not save ++++
+-Win (if only bombs remained) --> Do not save ++++
 -Timer
 -Texts in SDL
 -Solve known todos

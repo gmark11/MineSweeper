@@ -3,6 +3,13 @@
 
 #include <stdbool.h>
 
+typedef enum Status
+{
+    ingame,
+    win,
+    gameover
+} Status;
+
 typedef enum CellType
 {
     simple,
@@ -45,5 +52,7 @@ void new_game(Game *game, GameMode mode, Field field);
 void mark(Cell ***cells, int x, int y);
 void show(Game *game, Cell ***cells, int x, int y);
 Cell **setup_cells(Game *game);
+Status get_status();
+void set_status(Status type);
 
 #endif

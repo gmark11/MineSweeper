@@ -15,5 +15,6 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background);
 static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img);
 static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img);
+static void free_and_destroy(Cell **cells, Game *game, SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img);
 
 #endif
