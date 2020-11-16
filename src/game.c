@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
+#include "debugmalloc.h"
 #include "game.h"
 
 Status STATUS = ingame;
@@ -29,7 +30,7 @@ static void game_over(Game *game, Cell ***cells)
     set_status(gameover);
 }
 
-static void check_win(Game *game, Cell ***cells)
+static void check_win(Game *game, Cell ***cells) //TODO
 {
     int active = 0;
     for (int x = 0; x < game->field; x++)
@@ -71,7 +72,7 @@ void show(Game *game, Cell ***cells, int x, int y)
             show(game, cells, x + 1, y);
         }
     }
-    check_win(game, cells);
+    //check_win(game, cells);
 }
 
 void mark(Cell ***cells, int x, int y)

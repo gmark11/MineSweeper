@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include "debugmalloc.h"
 #include "game.h"
 #include "main.h"
 
@@ -77,7 +78,8 @@ static void setup_ui(Game *game, Cell **cells)
 					menu_on = true;
 					game_on = false;
 					loaded = false;
-					free_and_destroy(cells, game, renderer, window, background, cell_img);
+					destroy_sdl(renderer, window, background, cell_img);
+					free_memory(cells, game);
 					set_status(ingame);
 					menu_view(window, &renderer, background);
 				}
@@ -88,23 +90,28 @@ static void setup_ui(Game *game, Cell **cells)
 		//QUIT
 		if (ev.type == SDL_QUIT)
 		{
-			if (get_status() == ingame && game_on == true)
-				save(game, &cells);
-			free_and_destroy(cells, game, renderer, window, background, cell_img);
+			if (get_status() == ingame && game_on == true){
+                save(game, &cells);
+                free_memory(cells, game);
+			}
+			destroy_sdl(renderer, window, background, cell_img);
 			SDL_DestroyWindow(window);
 			SDL_Quit();
 		}
 	}
 }
 
-static void free_and_destroy(Cell **cells, Game *game, SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img)
+static void destroy_sdl(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img)
 {
-	for (int y = 0; y < game->field; y++)
-		free(cells[y]);
-	free(cells);
 	SDL_DestroyTexture(background);
 	SDL_DestroyTexture(cell_img);
 	SDL_DestroyRenderer(renderer);
+}
+
+static void free_memory(Cell **cells, Game *game){
+    for (int y = 0; y < game->field; y++)
+        free(cells[y]);
+    free(cells);
 }
 
 static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
