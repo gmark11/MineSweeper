@@ -77,7 +77,12 @@ void show(Game *game, Cell ***cells, int x, int y)
 
 void mark(Cell ***cells, int x, int y)
 {
-    (*cells)[x][y].marked = true;
+    if((*cells)[x][y].marked==true){
+        (*cells)[x][y].marked = false;
+    }
+    else{
+        (*cells)[x][y].marked = true;
+    }
 }
 
 void save(Game *game, Cell ***cells)
