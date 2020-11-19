@@ -23,9 +23,7 @@ void game_over(Game *game, Cell ***cells)
     for (int x = 0; x < game->field; x++)
     {
         for (int y = 0; y < game->field; y++)
-        {
             (*cells)[x][y].shown = true;
-        }
     }
     set_status(gameover);
 }
@@ -64,12 +62,10 @@ void show(Game *game, Cell ***cells, int x, int y)
 
 void mark(Cell ***cells, int x, int y)
 {
-    if((*cells)[x][y].marked==true){
+    if ((*cells)[x][y].marked == true)
         (*cells)[x][y].marked = false;
-    }
-    else{
+    else
         (*cells)[x][y].marked = true;
-    }
 }
 
 void save(Game *game, Cell ***cells)
@@ -81,9 +77,7 @@ void save(Game *game, Cell ***cells)
     for (int i = 0; i < game->field; i++)
     {
         for (int j = 0; j < game->field; j++)
-        {
             fprintf(fp, "%d %d %d\n", (*cells)[i][j].type, (*cells)[i][j].shown, (*cells)[i][j].marked);
-        }
     }
     //TODO: time
     fclose(fp);
@@ -92,7 +86,6 @@ void save(Game *game, Cell ***cells)
 bool load(Game *game, Cell ***cells)
 {
     int num;
-    char new_line;
 
     if (access("save.txt", F_OK) != -1)
     {
@@ -100,11 +93,9 @@ bool load(Game *game, Cell ***cells)
         //Game settings
         fscanf(fp, "%d", &num);
         game->mode = num;
-        fscanf(fp, "%c", &new_line); //new line char
 
         fscanf(fp, "%d", &num);
         game->field = num;
-        fscanf(fp, "%c", &new_line); //new line char
 
         (*cells) = setup_cells(game); //allocate memory with default settings
 
@@ -131,9 +122,7 @@ bool load(Game *game, Cell ***cells)
         return true;
     }
     else
-    {
         return false;
-    }
 }
 
 void new_game(Game *game, GameMode mode, Field field)
@@ -160,10 +149,10 @@ void set_bombs(Game *game, Cell ***cells)
 {
     srand(time(NULL));
 
-    int x, y, n;
+    int x, y, bomb_num;
 
-    n = 0;
-    while (n < game->mode)
+    bomb_num = 0;
+    while (bomb_num < game->mode)
     {
         x = rand() % game->field;
         y = rand() % game->field;
@@ -179,7 +168,7 @@ void set_bombs(Game *game, Cell ***cells)
             set_type(game, cells, x + 1, y - 1);
             set_type(game, cells, x + 1, y);
             set_type(game, cells, x + 1, y + 1);
-            n++;
+            bomb_num++;
         }
     }
 }

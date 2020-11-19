@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
 #include <stdlib.h>
@@ -125,19 +124,9 @@ void free_memory(Cell **cells, Game *game)
 void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-	if (renderer == NULL)
-	{
-		SDL_Log("Can not create renderer: %s", SDL_GetError());
-		exit(1);
-	}
 	*prenderer = renderer;
 
 	background = IMG_LoadTexture(renderer, "resources/game_background.png");
-	if (background == NULL)
-	{
-		SDL_Log("Can not open background image: %s", IMG_GetError());
-		exit(1);
-	}
 
 	SDL_Rect background_src = {0, 0, 1920, 1080};
 	SDL_Rect background_dest = {0, 0, 1280, 720};
@@ -205,13 +194,9 @@ void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *backgr
 void result_view(SDL_Renderer *renderer, SDL_Texture *result_background)
 {
 	if (get_status() == win)
-	{
 		result_background = IMG_LoadTexture(renderer, "resources/win.png");
-	}
 	if (get_status() == gameover)
-	{
 		result_background = IMG_LoadTexture(renderer, "resources/lose.png");
-	}
 
 	SDL_Rect src = {0, 0, 600, 600};
 	SDL_Rect dest = {0, 0, 1280, 720};
@@ -253,18 +238,13 @@ void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **
 {
 	if (ev.motion.x >= fpd->field_start_pixel_x && ev.motion.x <= (1280 - fpd->field_start_pixel_x) && ev.motion.y >= fpd->field_start_pixel_y && ev.motion.y <= (720 - fpd->field_start_pixel_y))
 	{
+		int x = (ev.motion.x - (int)fpd->field_start_pixel_x) / (int)fpd->cell_size;
+		int y = (ev.motion.y - (int)fpd->field_start_pixel_y) / (int)fpd->cell_size;
 		if (ev.button.button == SDL_BUTTON_LEFT)
-		{
-			int x = (ev.motion.x - (int)fpd->field_start_pixel_x) / (int)fpd->cell_size;
-			int y = (ev.motion.y - (int)fpd->field_start_pixel_y) / (int)fpd->cell_size;
 			show(game, &cells, x, y);
-		}
 		else if (ev.button.button == SDL_BUTTON_RIGHT)
-		{
-			int x = (ev.motion.x - (int)fpd->field_start_pixel_x) / (int)fpd->cell_size;
-			int y = (ev.motion.y - (int)fpd->field_start_pixel_y) / (int)fpd->cell_size;
 			mark(&cells, x, y);
-		}
+
 		render_field(renderer, game, cells, fpd, cell_img);
 	}
 }
