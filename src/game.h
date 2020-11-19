@@ -47,12 +47,12 @@ typedef struct Game
 } Game;
 
 void save(Game *game, Cell ***cells);
-bool load(Game *game, Cell ***cells);
 void new_game(Game *game, GameMode mode, Field field);
 void mark(Cell ***cells, int x, int y);
 void show(Game *game, Cell ***cells, int x, int y);
+void set_status(Status type);
+bool load(Game *game, Cell ***cells);
 Cell **setup_cells(Game *game);
 Status get_status();
-void set_status(Status type);
 
 #endif

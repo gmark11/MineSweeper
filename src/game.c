@@ -18,7 +18,7 @@ Status get_status()
     return STATUS;
 }
 
-static void game_over(Game *game, Cell ***cells)
+void game_over(Game *game, Cell ***cells)
 {
     for (int x = 0; x < game->field; x++)
     {
@@ -30,7 +30,7 @@ static void game_over(Game *game, Cell ***cells)
     set_status(gameover);
 }
 
-static void check_win(Game *game, Cell ***cells) //TODO
+void check_win(Game *game, Cell ***cells) //TODO
 {
     int active = 0;
     for (int x = 0; x < game->field; x++)
@@ -150,7 +150,7 @@ void new_game(Game *game, GameMode mode, Field field)
     game->field = field;
 }
 
-static void set_type(Game *game, Cell ***cells, int x, int y)
+void set_type(Game *game, Cell ***cells, int x, int y)
 {
     if (x < 0 || x >= game->field)
         return;
@@ -164,7 +164,7 @@ static void set_type(Game *game, Cell ***cells, int x, int y)
     (*cells)[x][y].type++;
 }
 
-static void set_bombs(Game *game, Cell ***cells)
+void set_bombs(Game *game, Cell ***cells)
 {
     srand(time(NULL));
 
