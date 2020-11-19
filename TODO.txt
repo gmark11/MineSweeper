@@ -1,7 +1,5 @@
--Win (if only bombs remained) --> Do not save
--Win & Lose text
 -Timer
 -Mode and Field texts
 
 -Solve known todos
--Error and bug fix (Unflag)
+-Error and bug fix

@@ -48,6 +48,7 @@ typedef struct Game
 
 void save(Game *game, Cell ***cells);
 void new_game(Game *game, GameMode mode, Field field);
+void check_win(Game *game, int *covered_cells);
 void mark(Cell ***cells, int x, int y);
 void show(Game *game, Cell ***cells, int x, int y);
 void set_status(Status type);

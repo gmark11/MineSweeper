@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
 #include <stdlib.h>
@@ -18,11 +19,11 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-static void setup_ui(Game *game, Cell **cells)
+void setup_ui(Game *game, Cell **cells)
 {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-	SDL_Texture *background, *cell_img;
+	SDL_Texture *background, *cell_img, *result_background;
 	bool menu_on, game_on, loaded;
 
 	//WINDOW SETUP
@@ -43,6 +44,9 @@ static void setup_ui(Game *game, Cell **cells)
 		menu_view(window, &renderer, background);
 	}
 
+	//Default INIT of MODE and FIELD (only used in the menu)
+	GameMode mode = medium_mode;
+	Field field = medium_field;
 	//EVENT CONTROLLER
 	SDL_Event ev;
 	while (SDL_WaitEvent(&ev))
@@ -51,7 +55,7 @@ static void setup_ui(Game *game, Cell **cells)
 		if (menu_on == true)
 		{
 			if (ev.type == SDL_MOUSEBUTTONDOWN)
-				detect_menu_click(ev, game, background, renderer, &menu_on);
+				detect_menu_click(ev, game, background, renderer, &menu_on, &mode, &field);
 		}
 		//GAME CONTROLLER
 		if (menu_on == false)
@@ -73,48 +77,52 @@ static void setup_ui(Game *game, Cell **cells)
 			{
 				if (get_status() != ingame)
 				{
-                    sleep(5); //TODO: not 100%, this is the best method
-                    //TODO: TEXT
+					sleep(2);
+					result_view(renderer, result_background);
+					sleep(3); //TODO: not 100%, this is the best method
 					menu_on = true;
 					game_on = false;
 					loaded = false;
-					destroy_sdl(renderer, window, background, cell_img);
+					destroy_sdl(renderer, window, background, cell_img, result_background);
 					free_memory(cells, game);
 					set_status(ingame);
 					menu_view(window, &renderer, background);
 				}
-				if(ev.type == SDL_MOUSEBUTTONDOWN)
-                    detect_game_click(renderer, ev, game, cells, &fpd, cell_img);
+				if (ev.type == SDL_MOUSEBUTTONDOWN)
+					detect_game_click(renderer, ev, game, cells, &fpd, cell_img);
 			}
 		}
 		//QUIT
 		if (ev.type == SDL_QUIT)
 		{
-			if (get_status() == ingame && game_on == true){
-                save(game, &cells);
-                free_memory(cells, game);
+			if (get_status() == ingame && game_on == true)
+			{
+				save(game, &cells);
+				free_memory(cells, game);
 			}
-			destroy_sdl(renderer, window, background, cell_img);
+			destroy_sdl(renderer, window, background, cell_img, result_background);
 			SDL_DestroyWindow(window);
 			SDL_Quit();
 		}
 	}
 }
 
-static void destroy_sdl(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img)
+void destroy_sdl(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img, SDL_Texture *result_background)
 {
 	SDL_DestroyTexture(background);
+	SDL_DestroyTexture(result_background);
 	SDL_DestroyTexture(cell_img);
 	SDL_DestroyRenderer(renderer);
 }
 
-static void free_memory(Cell **cells, Game *game){
-    for (int y = 0; y < game->field; y++)
-        free(cells[y]);
-    free(cells);
+void free_memory(Cell **cells, Game *game)
+{
+	for (int y = 0; y < game->field; y++)
+		free(cells[y]);
+	free(cells);
 }
 
-static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
+void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 	if (renderer == NULL)
@@ -137,8 +145,9 @@ static void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 	SDL_RenderPresent(renderer);
 }
 
-static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img)
+void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img)
 {
+	int covered_cells = game->field * game->field;
 	for (int x = fpd->field_start_pixel_x; x < game->field * fpd->cell_size + fpd->field_start_pixel_x; x = x + fpd->cell_size)
 	{
 		for (int y = fpd->field_start_pixel_y; y < game->field * fpd->cell_size + fpd->field_start_pixel_y; y = y + fpd->cell_size)
@@ -147,6 +156,7 @@ static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, Field
 			int index_y = (y - fpd->field_start_pixel_y) / fpd->cell_size;
 			if (cells[index_x][index_y].shown == true)
 			{
+				covered_cells--;
 				switch (cells[index_x][index_y].type)
 				{
 				case simple:
@@ -175,24 +185,16 @@ static void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, Field
 			SDL_RenderCopy(renderer, cell_img, &fd_cell_src, &fd_cell_dest);
 		}
 	}
+	check_win(game, &covered_cells);
 	SDL_RenderPresent(renderer);
 }
 
-static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
+void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-	if (renderer == NULL)
-	{
-		SDL_Log("Can not create renderer: %s", SDL_GetError());
-		exit(1);
-	}
 	*prenderer = renderer;
+
 	background = IMG_LoadTexture(renderer, "resources/background.png");
-	if (background == NULL)
-	{
-		SDL_Log("Can not open background image: %s", IMG_GetError());
-		exit(1);
-	}
 
 	SDL_Rect src = {0, 0, 1920, 1080};
 	SDL_Rect dest = {0, 0, 1280, 720};
@@ -200,39 +202,54 @@ static void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture 
 	SDL_RenderPresent(renderer);
 }
 
-static void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on)
+void result_view(SDL_Renderer *renderer, SDL_Texture *result_background)
 {
-	GameMode mode = hard_mode; //TODO
-	Field field = medium_field;
+	if (get_status() == win)
+	{
+		result_background = IMG_LoadTexture(renderer, "resources/win.png");
+	}
+	if (get_status() == gameover)
+	{
+		result_background = IMG_LoadTexture(renderer, "resources/lose.png");
+	}
+
+	SDL_Rect src = {0, 0, 600, 600};
+	SDL_Rect dest = {0, 0, 1280, 720};
+	SDL_RenderCopy(renderer, result_background, &src, &dest);
+	SDL_RenderPresent(renderer);
+}
+
+void detect_menu_click(SDL_Event ev, Game *game, SDL_Texture *background, SDL_Renderer *renderer, bool *menu_on, GameMode *mode, Field *field)
+{
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 235 && ev.motion.y <= 300)
-		field = small_field;
+		*field = small_field;
 
 	if (ev.motion.x >= 485 && ev.motion.x <= 795 && ev.motion.y >= 235 && ev.motion.y <= 300)
-		field = medium_field;
+		*field = medium_field;
 
 	if (ev.motion.x >= 810 && ev.motion.x <= 1120 && ev.motion.y >= 235 && ev.motion.y <= 300)
-		field = big_field;
+		*field = big_field;
 
 	//GAME MODE
 	if (ev.motion.x >= 160 && ev.motion.x <= 470 && ev.motion.y >= 325 && ev.motion.y <= 390)
-		mode = easy_mode;
+		*mode = easy_mode;
 
 	if (ev.motion.x >= 485 && ev.motion.x <= 795 && ev.motion.y >= 325 && ev.motion.y <= 390)
-		mode = medium_mode;
+		*mode = medium_mode;
 
 	if (ev.motion.x >= 810 && ev.motion.x <= 1120 && ev.motion.y >= 325 && ev.motion.y <= 390)
-		mode = hard_mode;
+		*mode = hard_mode;
 	//START BUTTON
 	if (ev.motion.x >= 485 && ev.motion.x <= 800 && ev.motion.y >= 460 && ev.motion.y <= 560)
 	{
 		SDL_DestroyTexture(background);
 		SDL_DestroyRenderer(renderer);
 		*menu_on = false;
-		new_game(game, mode, field);
+		new_game(game, *mode, *field);
 	}
 }
 
-static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img)
+void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img)
 {
 	if (ev.motion.x >= fpd->field_start_pixel_x && ev.motion.x <= (1280 - fpd->field_start_pixel_x) && ev.motion.y >= fpd->field_start_pixel_y && ev.motion.y <= (720 - fpd->field_start_pixel_y))
 	{
@@ -252,11 +269,11 @@ static void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, 
 	}
 }
 
-static void sdl_init(char const *title, int width, int height, SDL_Window **pwindow)
+void sdl_init(char const *title, int width, int height, SDL_Window **pwindow)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
-		SDL_Log("Cant not start SDL: %s", SDL_GetError());
+		SDL_Log("Can not start SDL: %s", SDL_GetError());
 		exit(1);
 	}
 

@@ -30,23 +30,10 @@ void game_over(Game *game, Cell ***cells)
     set_status(gameover);
 }
 
-void check_win(Game *game, Cell ***cells) //TODO
+void check_win(Game *game, int *covered_cells)
 {
-    int active = 0;
-    for (int x = 0; x < game->field; x++)
-    {
-        for (int y = 0; y < game->field; y++)
-        {
-            if ((*cells)[x][y].shown == true)
-            {
-                active++;
-            }
-        }
-    }
-    if (active == game->mode)
-    {
+    if (*covered_cells == game->mode)
         set_status(win);
-    }
 }
 
 void show(Game *game, Cell ***cells, int x, int y)
