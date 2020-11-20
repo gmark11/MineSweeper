@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "SDL2/SDL_ttf.h"
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
 #include <stdlib.h>
@@ -50,6 +51,7 @@ void setup_ui(Game *game, Cell **cells)
 	SDL_Event ev;
 	while (SDL_WaitEvent(&ev))
 	{
+		update_timer(SDL_GetTicks()/1000);
 		//MENU CONTROLLER
 		if (menu_on == true)
 		{
@@ -119,6 +121,13 @@ void free_memory(Cell **cells, Game *game)
 	for (int y = 0; y < game->field; y++)
 		free(cells[y]);
 	free(cells);
+}
+
+void update_timer(double time){
+	double min = time/60;
+	double sec = time%60;
+
+	
 }
 
 void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
