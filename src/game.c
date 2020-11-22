@@ -3,10 +3,43 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
-#include "debugmalloc.h"
 #include "game.h"
 
 Status STATUS = ingame;
+clock_t game_time;
+clock_t loaded_time;
+
+double get_time()
+{
+    return game_time / CLOCKS_PER_SEC;
+}
+
+//Param: -1: set start_time when the game is started, else: set load time
+void set_time(double t)
+{
+    if (t == -1)
+    {
+        game_time = clock();
+        loaded_time = 0;
+    }
+    else
+    {
+        loaded_time = t * CLOCKS_PER_SEC;
+        game_time = 0;
+    }
+}
+
+void update_time()
+{
+    if (loaded_time == 0)
+    {
+        game_time = clock() - game_time;
+    }
+    else
+    {
+        game_time = clock() + loaded_time;
+    }
+}
 
 void set_status(Status type)
 {
@@ -57,7 +90,6 @@ void show(Game *game, Cell ***cells, int x, int y)
             show(game, cells, x + 1, y);
         }
     }
-    //check_win(game, cells);
 }
 
 void mark(Cell ***cells, int x, int y)
@@ -73,19 +105,21 @@ void save(Game *game, Cell ***cells)
     FILE *fp = fopen("save.txt", "wt");
     //Game settings
     fprintf(fp, "%d %d\n", game->mode, game->field);
+    //Time
+    fprintf(fp, "%f\n", get_time());
     //Map settings
     for (int i = 0; i < game->field; i++)
     {
         for (int j = 0; j < game->field; j++)
             fprintf(fp, "%d %d %d\n", (*cells)[i][j].type, (*cells)[i][j].shown, (*cells)[i][j].marked);
     }
-    //TODO: time
     fclose(fp);
 }
 
 bool load(Game *game, Cell ***cells)
 {
     int num;
+    double time_num;
 
     if (access("save.txt", F_OK) != -1)
     {
@@ -96,6 +130,10 @@ bool load(Game *game, Cell ***cells)
 
         fscanf(fp, "%d", &num);
         game->field = num;
+
+        //Time
+        fscanf(fp, "%lf", &time_num);
+        set_time(time_num);
 
         (*cells) = setup_cells(game); //allocate memory with default settings
 
@@ -112,11 +150,8 @@ bool load(Game *game, Cell ***cells)
 
                 fscanf(fp, "%d", &num);
                 (*cells)[i][j].marked = num;
-
-                fscanf(fp, "%c", &new_line); //new line char
             }
         }
-        //TODO: time
         fclose(fp);
         remove("save.txt");
         return true;
@@ -191,4 +226,11 @@ Cell **setup_cells(Game *game)
     }
     set_bombs(game, &cells);
     return cells;
+}
+
+void free_memory(Cell **cells, Game *game)
+{
+    for (int y = 0; y < game->field; y++)
+        free(cells[y]);
+    free(cells);
 }

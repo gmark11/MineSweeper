@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <stdbool.h>
+#include <time.h>
 
 typedef enum Status
 {
@@ -52,8 +53,12 @@ void check_win(Game *game, int *covered_cells);
 void mark(Cell ***cells, int x, int y);
 void show(Game *game, Cell ***cells, int x, int y);
 void set_status(Status type);
+void free_memory(Cell **cells, Game *game);
 bool load(Game *game, Cell ***cells);
 Cell **setup_cells(Game *game);
 Status get_status();
+double get_time();
+void set_time(double t);
+void update_time();
 
 #endif
