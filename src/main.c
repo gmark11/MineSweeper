@@ -51,7 +51,6 @@ void setup_ui(Game *game, Cell **cells)
 	SDL_Event ev;
 	while (SDL_WaitEvent(&ev))
 	{
-		SDL_GetError();
 		//MENU CONTROLLER
 		if (menu_on == true)
 		{
@@ -113,6 +112,7 @@ void setup_ui(Game *game, Cell **cells)
 			SDL_DestroyWindow(window);
 			SDL_Quit();
 		}
+		SDL_RenderPresent(renderer);
 	}
 }
 
@@ -136,7 +136,6 @@ void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *backgr
 	SDL_Rect background_src = {0, 0, 1920, 1080};
 	SDL_Rect background_dest = {0, 0, 1280, 720};
 	SDL_RenderCopy(renderer, background, &background_src, &background_dest);
-	SDL_RenderPresent(renderer);
 }
 
 void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSetting *fpd, SDL_Texture *cell_img)
@@ -181,7 +180,6 @@ void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSe
 		}
 	}
 	check_win(game, &covered_cells);
-	SDL_RenderPresent(renderer);
 }
 
 void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
@@ -194,7 +192,6 @@ void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *backgr
 	SDL_Rect src = {0, 0, 1920, 1080};
 	SDL_Rect dest = {0, 0, 1280, 720};
 	SDL_RenderCopy(renderer, background, &src, &dest);
-	SDL_RenderPresent(renderer);
 }
 
 void result_view(SDL_Renderer *renderer, SDL_Texture *result_background)
@@ -260,7 +257,6 @@ void render_clock(SDL_Renderer *renderer, SDL_Surface *clock, SDL_Texture *clock
 	src.w = clock->w;
 	src.h = clock->h;
 	SDL_RenderCopy(renderer, clock_t, NULL, &src);
-	SDL_RenderPresent(renderer);
 	TTF_CloseFont(font);
 }
 
