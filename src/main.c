@@ -24,12 +24,16 @@ void setup_ui(Game *game, Cell **cells)
 	SDL_Renderer *renderer;
 	SDL_Texture *background, *cell_img, *result_background, *clock_t;
 	SDL_Surface *clock;
-	bool menu_on, game_on, loaded;
+	bool menu_on, game_on, loaded; // These handles different sessions
+	bool running = true;
+	SDL_Event event;
+	GameMode mode = medium_mode; // Default values of MODE
+	Field field = medium_field;	 // and FIELD (only used in the menu)
 
 	//WINDOW SETUP
 	sdl_init("MineSweeper", 1280, 720, &window);
 
-	//CHECK IF SAVED
+	//CHECK IF ]
 	if (load(game, &cells) == true)
 	{
 		menu_on = false;
@@ -44,19 +48,15 @@ void setup_ui(Game *game, Cell **cells)
 		menu_view(window, &renderer, background);
 	}
 
-	// Default values of MODE and FIELD (only used in the menu)
-	GameMode mode = medium_mode;
-	Field field = medium_field;
 	//EVENT CONTROLLER
-	SDL_Event ev;
-	while (SDL_WaitEvent(&ev))
+	while (SDL_WaitEvent(&event))
 	{
 		//MENU CONTROLLER
 		if (menu_on == true)
 		{
 			// Detect click in menu
-			if (ev.type == SDL_MOUSEBUTTONDOWN)
-				detect_menu_click(ev, game, background, renderer, &menu_on, &mode, &field);
+			if (event.type == SDL_MOUSEBUTTONDOWN)
+				detect_menu_click(event, game, background, renderer, &menu_on, &mode, &field);
 		}
 		//GAME CONTROLLER
 		if (menu_on == false)
@@ -96,12 +96,12 @@ void setup_ui(Game *game, Cell **cells)
 					menu_view(window, &renderer, background);
 				}
 				// Detect click during the game
-				if (ev.type == SDL_MOUSEBUTTONDOWN)
-					detect_game_click(renderer, ev, game, cells, &fpd, cell_img);
+				if (event.type == SDL_MOUSEBUTTONDOWN)
+					detect_game_click(renderer, event, game, cells, &fpd, cell_img);
 			}
 		}
 		// QUIT
-		if (ev.type == SDL_QUIT)
+		if (event.type == SDL_QUIT)
 		{
 			if (get_status() == ingame && game_on == true)
 			{

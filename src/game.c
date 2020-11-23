@@ -6,26 +6,27 @@
 #include "game.h"
 
 Status STATUS = ingame;
-clock_t game_time;
-clock_t loaded_time;
+clock_t start_time, loaded_time, game_time;
 
 double get_time()
 {
     return game_time / CLOCKS_PER_SEC;
 }
 
-//Param: -1: set start_time when the game is started, else: set load time
+// Param: -1: set start_time when the game is started, else: set load time
 void set_time(double t)
 {
     if (t == -1)
     {
-        game_time = clock();
+        start_time = clock();
+        game_time = 0;
         loaded_time = 0;
     }
     else
     {
         loaded_time = t * CLOCKS_PER_SEC;
         game_time = 0;
+        start_time = 0;
     }
 }
 
@@ -33,7 +34,7 @@ void update_time()
 {
     if (loaded_time == 0)
     {
-        game_time = clock() - game_time;
+        game_time = clock() - start_time;
     }
     else
     {
