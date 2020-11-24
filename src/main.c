@@ -25,7 +25,6 @@ void setup_ui(Game *game, Cell **cells)
 	SDL_Texture *background, *cell_img, *result_background, *clock_t;
 	SDL_Surface *clock;
 	bool menu_on, game_on, loaded; // These handles different sessions
-	bool running = true;
 	SDL_Event event;
 	GameMode mode = medium_mode; // Default values of MODE
 	Field field = medium_field;	 // and FIELD (only used in the menu)
@@ -33,7 +32,7 @@ void setup_ui(Game *game, Cell **cells)
 	//WINDOW SETUP
 	sdl_init("MineSweeper", 1280, 720, &window);
 
-	//CHECK IF ]
+	//CHECK IF THERE IS ACTIVE SAVE
 	if (load(game, &cells) == true)
 	{
 		menu_on = false;
@@ -48,53 +47,53 @@ void setup_ui(Game *game, Cell **cells)
 		menu_view(window, &renderer, background);
 	}
 
-	//EVENT CONTROLLER
+	// EVENT CONTROLLER
 	while (SDL_WaitEvent(&event))
 	{
-		//MENU CONTROLLER
+		// MENU CONTROLLER
 		if (menu_on == true)
 		{
 			// Detect click in menu
 			if (event.type == SDL_MOUSEBUTTONDOWN)
 				detect_menu_click(event, game, background, renderer, &menu_on, &mode, &field);
 		}
-		//GAME CONTROLLER
+
+		// GAME CONTROLLER
 		if (menu_on == false)
 		{
 			FieldPixelSetting fpd;
 			if (game_on == false)
 			{
-				//INIT GAME
+				// INIT GAME
 				game_on = true;
 				if (loaded == false)
 				{
 					cells = setup_cells(game);
 					set_time(-1);
 				}
+                calculate_cells(&fpd, game);
 				game_view(window, &renderer, background);
-				fpd.cell_size = (720 - 2 * 70) / game->field;
-				fpd.field_start_pixel_x = (1280 - (720 - 2 * 70)) / 2;
-				fpd.field_start_pixel_y = (720 - (720 - 2 * 70)) / 2;
 				render_field(renderer, game, cells, &fpd, cell_img);
 			}
 			else
 			{
-				// Update timer
+				// UPDATE TIMER
 				render_clock(renderer, clock, clock_t);
+
 				// If game is won or lost (end screen + start new game)
 				if (get_status() != ingame)
 				{
-					SDL_Delay(2000);
-					result_view(renderer, result_background);
-					SDL_Delay(3000);
-					menu_on = true;
+				    menu_on = true;
 					game_on = false;
 					loaded = false;
+
+					result_view(renderer, result_background);
 					destroy_sdl(renderer, window, background, cell_img, result_background, clock, clock_t);
 					free_memory(cells, game);
 					set_status(ingame);
 					menu_view(window, &renderer, background);
 				}
+
 				// Detect click during the game
 				if (event.type == SDL_MOUSEBUTTONDOWN)
 					detect_game_click(renderer, event, game, cells, &fpd, cell_img);
@@ -126,9 +125,20 @@ void destroy_sdl(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *backgr
 	SDL_DestroyRenderer(renderer);
 }
 
+void calculate_cells(FieldPixelSetting *fpd, Game *game){
+    fpd->cell_size = (720 - 2 * 70) / game->field;
+	fpd->field_start_pixel_x = (1280 - (720 - 2 * 70)) / 2;
+	fpd->field_start_pixel_y = (720 - (720 - 2 * 70)) / 2;
+}
+
 void game_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+	if (renderer == NULL)
+	{
+		SDL_Log("Error while creating renderer: %s", SDL_GetError());
+		exit(1);
+	}
 	*prenderer = renderer;
 
 	background = IMG_LoadTexture(renderer, "resources/game_background.png");
@@ -185,6 +195,11 @@ void render_field(SDL_Renderer *renderer, Game *game, Cell **cells, FieldPixelSe
 void menu_view(SDL_Window *window, SDL_Renderer **prenderer, SDL_Texture *background)
 {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+	if (renderer == NULL)
+	{
+		SDL_Log("Error while creating renderer: %s", SDL_GetError());
+		exit(1);
+	}
 	*prenderer = renderer;
 
 	background = IMG_LoadTexture(renderer, "resources/background.png");
@@ -203,8 +218,10 @@ void result_view(SDL_Renderer *renderer, SDL_Texture *result_background)
 
 	SDL_Rect src = {0, 0, 600, 600};
 	SDL_Rect dest = {0, 0, 1280, 720};
+	SDL_Delay(2000); //to wait before end screen
 	SDL_RenderCopy(renderer, result_background, &src, &dest);
 	SDL_RenderPresent(renderer);
+	SDL_Delay(3000); // to wait before new game
 }
 
 void render_clock(SDL_Renderer *renderer, SDL_Surface *clock, SDL_Texture *clock_t)
@@ -219,6 +236,11 @@ void render_clock(SDL_Renderer *renderer, SDL_Surface *clock, SDL_Texture *clock
 
 	TTF_Init();
 	TTF_Font *font = TTF_OpenFont("resources/Sans.ttf", 34);
+	if (font == NULL)
+	{
+		SDL_Log("Error while opening font: %s", SDL_GetError());
+		exit(1);
+	}
 
 	char min_in_string[3];
 	char sec_in_string[3];

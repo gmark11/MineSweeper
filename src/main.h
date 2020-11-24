@@ -18,5 +18,6 @@ void detect_game_click(SDL_Renderer *renderer, SDL_Event ev, Game *game, Cell **
 void destroy_sdl(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *background, SDL_Texture *cell_img, SDL_Texture *result_background, SDL_Surface *clock, SDL_Texture *clock_t);
 void result_view(SDL_Renderer *renderer, SDL_Texture *result_background);
 void render_clock(SDL_Renderer *renderer, SDL_Surface *clock, SDL_Texture *clock_t);
+void calculate_cells(FieldPixelSetting *fpd, Game *game);
 
 #endif

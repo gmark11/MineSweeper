@@ -104,6 +104,10 @@ void mark(Cell ***cells, int x, int y)
 void save(Game *game, Cell ***cells)
 {
     FILE *fp = fopen("save.txt", "wt");
+    if (fp == NULL)
+    {
+        printf("Error during opening save.txt!");
+    }
     //Game settings
     fprintf(fp, "%d %d\n", game->mode, game->field);
     //Time
@@ -125,6 +129,11 @@ bool load(Game *game, Cell ***cells)
     if (access("save.txt", F_OK) != -1)
     {
         FILE *fp = fopen("save.txt", "rt");
+        if (fp == NULL)
+        {
+            printf("Error during opening save.txt!");
+        }
+
         //Game settings
         fscanf(fp, "%d", &num);
         game->mode = num;
@@ -185,9 +194,9 @@ void set_bombs(Game *game, Cell ***cells)
 {
     srand(time(NULL));
 
-    int x, y, bomb_num;
+    int x, y;
+    int bomb_num = 0;
 
-    bomb_num = 0;
     while (bomb_num < game->mode)
     {
         x = rand() % game->field;
