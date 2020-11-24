@@ -10,6 +10,9 @@ clock_t start_time, loaded_time, game_time;
 
 double get_time()
 {
+    if((game_time / CLOCKS_PER_SEC)>99.98){
+        set_time(0);
+    }
     return game_time / CLOCKS_PER_SEC;
 }
 
