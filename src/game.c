@@ -208,6 +208,8 @@ void set_bombs(Game *game, Cell ***cells)
         if ((*cells)[x][y].type != bomb)
         {
             (*cells)[x][y].type = bomb;
+            bomb_num++;
+
             set_type(game, cells, x - 1, y - 1);
             set_type(game, cells, x - 1, y);
             set_type(game, cells, x - 1, y + 1);
@@ -216,7 +218,6 @@ void set_bombs(Game *game, Cell ***cells)
             set_type(game, cells, x + 1, y - 1);
             set_type(game, cells, x + 1, y);
             set_type(game, cells, x + 1, y + 1);
-            bomb_num++;
         }
     }
 }
