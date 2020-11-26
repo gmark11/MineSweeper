@@ -10,7 +10,8 @@ clock_t start_time, loaded_time, game_time;
 
 double get_time()
 {
-    if((game_time / CLOCKS_PER_SEC)>99.98){
+    if ((game_time / CLOCKS_PER_SEC) > 99.98)
+    {
         set_time(0);
     }
     return game_time / CLOCKS_PER_SEC;
@@ -68,7 +69,9 @@ void game_over(Game *game, Cell ***cells)
 void check_win(Game *game, int *covered_cells)
 {
     if (*covered_cells == game->mode)
+    {
         set_status(win);
+    }
 }
 
 void show(Game *game, Cell ***cells, int x, int y)
@@ -77,9 +80,9 @@ void show(Game *game, Cell ***cells, int x, int y)
         return;
     if (y < 0 || y >= game->field)
         return;
-    if ((*cells)[x][y].shown == true)
-        return;
     if ((*cells)[x][y].marked == true)
+        return;
+    if ((*cells)[x][y].shown == true)
         return;
     if ((*cells)[x][y].type == bomb)
         game_over(game, cells);
@@ -185,9 +188,9 @@ void set_type(Game *game, Cell ***cells, int x, int y)
         return;
     if (y < 0 || y >= game->field)
         return;
-    if ((*cells)[x][y].type == bomb)
-        return;
     if ((*cells)[x][y].type == three)
+        return;
+    if ((*cells)[x][y].type == bomb)
         return;
 
     (*cells)[x][y].type++;
