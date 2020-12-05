@@ -45,20 +45,27 @@ typedef struct Game
 {
     GameMode mode;
     Field field;
+    Status status;
 } Game;
 
-void save(Game *game, Cell ***cells);
+typedef struct Timer{
+    clock_t start_time;
+    clock_t loaded_time;
+    clock_t game_time;
+}Timer;
+
+void save(Game *game, Cell ***cells, Timer *timer);
 void new_game(Game *game, GameMode mode, Field field);
 void check_win(Game *game, int *covered_cells);
 void mark(Cell ***cells, int x, int y);
 void show(Game *game, Cell ***cells, int x, int y);
-void set_status(Status type);
+void set_status(Status type, Game *game);
 void free_memory(Cell **cells, Game *game);
-bool load(Game *game, Cell ***cells);
+bool load(Game *game, Cell ***cells, Timer *timer);
 Cell **setup_cells(Game *game);
 Status get_status();
-double get_time();
-void set_time(double t);
-void update_time();
+double get_time(Timer *timer);
+void set_time(Timer *timer, double t);
+void update_time(Timer *timer);
 
 #endif

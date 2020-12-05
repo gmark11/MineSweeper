@@ -1,5 +1,0 @@
--Timer
--Mode and Field texts
-
--Solve known todos
--Error and bug fix

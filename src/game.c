@@ -5,55 +5,47 @@
 #include <unistd.h>
 #include "game.h"
 
-Status STATUS = ingame;
-clock_t start_time, loaded_time, game_time;
-
-double get_time()
+double get_time(Timer *timer)
 {
-    if ((game_time / CLOCKS_PER_SEC) > 99.98)
+    if ((timer->game_time / CLOCKS_PER_SEC) > 99.98)
     {
-        set_time(0);
+        set_time(timer, 0);
     }
-    return game_time / CLOCKS_PER_SEC;
+    return timer->game_time / CLOCKS_PER_SEC;
 }
 
 // Param: -1: set start_time when the game is started, else: set load time
-void set_time(double t)
+void set_time(Timer *timer, double t)
 {
     if (t == -1)
     {
-        start_time = clock();
-        game_time = 0;
-        loaded_time = 0;
+        timer->start_time = clock();
+        timer->game_time = 0;
+        timer->loaded_time = 0;
     }
     else
     {
-        loaded_time = t * CLOCKS_PER_SEC;
-        game_time = 0;
-        start_time = 0;
+        timer->loaded_time = t * CLOCKS_PER_SEC;
+        timer->game_time = 0;
+        timer->start_time = 0;
     }
 }
 
-void update_time()
+void update_time(Timer *timer)
 {
-    if (loaded_time == 0)
+    if (timer->loaded_time == 0)
     {
-        game_time = clock() - start_time;
+        timer->game_time = clock() - timer->start_time;
     }
     else
     {
-        game_time = clock() + loaded_time;
+        timer->game_time = clock() + timer->loaded_time;
     }
 }
 
-void set_status(Status type)
+void set_status(Status type, Game *game)
 {
-    STATUS = type;
-}
-
-Status get_status()
-{
-    return STATUS;
+    game->status = type;
 }
 
 void game_over(Game *game, Cell ***cells)
@@ -63,14 +55,14 @@ void game_over(Game *game, Cell ***cells)
         for (int y = 0; y < game->field; y++)
             (*cells)[x][y].shown = true;
     }
-    set_status(gameover);
+    set_status(gameover, game);
 }
 
 void check_win(Game *game, int *covered_cells)
 {
     if (*covered_cells == game->mode)
     {
-        set_status(win);
+        set_status(win, game);
     }
 }
 
@@ -107,7 +99,7 @@ void mark(Cell ***cells, int x, int y)
         (*cells)[x][y].marked = true;
 }
 
-void save(Game *game, Cell ***cells)
+void save(Game *game, Cell ***cells, Timer *timer)
 {
     FILE *fp = fopen("save.txt", "wt");
     if (fp == NULL)
@@ -117,7 +109,7 @@ void save(Game *game, Cell ***cells)
     //Game settings
     fprintf(fp, "%d %d\n", game->mode, game->field);
     //Time
-    fprintf(fp, "%f\n", get_time());
+    fprintf(fp, "%f\n", get_time(timer));
     //Map settings
     for (int i = 0; i < game->field; i++)
     {
@@ -127,7 +119,7 @@ void save(Game *game, Cell ***cells)
     fclose(fp);
 }
 
-bool load(Game *game, Cell ***cells)
+bool load(Game *game, Cell ***cells, Timer *timer)
 {
     int num;
     double time_num;
@@ -149,7 +141,7 @@ bool load(Game *game, Cell ***cells)
 
         //Time
         fscanf(fp, "%lf", &time_num);
-        set_time(time_num);
+        set_time(timer, time_num);
 
         (*cells) = setup_cells(game); //allocate memory with default settings
 
@@ -180,6 +172,7 @@ void new_game(Game *game, GameMode mode, Field field)
 {
     game->mode = mode;
     game->field = field;
+    game->status = ingame;
 }
 
 void set_type(Game *game, Cell ***cells, int x, int y)

@@ -13,12 +13,13 @@
 int main(int argc, char *argv[])
 {
 	Game game;
+	Timer timer;
 	Cell **cells;
-	setup_ui(&game, cells);
+	setup_ui(&game, cells, &timer);
 	return 0;
 }
 
-void setup_ui(Game *game, Cell **cells)
+void setup_ui(Game *game, Cell **cells, Timer *timer)
 {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
@@ -32,7 +33,7 @@ void setup_ui(Game *game, Cell **cells)
 	sdl_init("MineSweeper", 1280, 720, &window, &renderer);
 
 	//CHECK IF THERE IS ACTIVE SAVE
-	if (load(game, &cells) == true)
+	if (load(game, &cells, timer) == true)
 	{
 		menu_on = false;
 		game_on = false;
@@ -69,7 +70,7 @@ void setup_ui(Game *game, Cell **cells)
 					if (loaded == false)
 					{
 						cells = setup_cells(game);
-						set_time(-1);
+						set_time(timer, -1);
 					}
 					calculate_cells(&fpd, game);
 					menu_or_game_view(window, renderer, 1);
@@ -78,15 +79,15 @@ void setup_ui(Game *game, Cell **cells)
 				else
 				{
 					// If game is won or lost (end screen + start new game)
-					if (get_status() != ingame)
+					if (game->status != ingame)
 					{
 						menu_on = true;
 						game_on = false;
 						loaded = false;
 
-						result_view(renderer);
+						result_view(renderer, game);
 						free_memory(cells, game);
-						set_status(ingame);
+						set_status(ingame, game);
 						menu_or_game_view(window, renderer, 0);
 					}
 
@@ -99,9 +100,9 @@ void setup_ui(Game *game, Cell **cells)
 			if (event.type == SDL_QUIT)
 			{
 				running = false;
-				if (get_status() == ingame && game_on == true)
+				if (game->status == ingame && game_on == true)
 				{
-					save(game, &cells);
+					save(game, &cells, timer);
 					free_memory(cells, game);
 				}
 				SDL_DestroyRenderer(renderer);
@@ -111,7 +112,7 @@ void setup_ui(Game *game, Cell **cells)
 		}
 		// UPDATE TIMER
 		if (game_on == true)
-			render_clock(renderer);
+			render_clock(renderer, timer);
 	}
 }
 
@@ -186,12 +187,12 @@ void menu_or_game_view(SDL_Window *window, SDL_Renderer *renderer, int menu_or_g
 	SDL_DestroyTexture(background);
 }
 
-void result_view(SDL_Renderer *renderer)
+void result_view(SDL_Renderer *renderer, Game *game)
 {
 	SDL_Texture *result_background;
-	if (get_status() == win)
+	if (game->status == win)
 		result_background = IMG_LoadTexture(renderer, "resources/win.png");
-	if (get_status() == gameover)
+	if (game->status == gameover)
 		result_background = IMG_LoadTexture(renderer, "resources/lose.png");
 
 	SDL_Rect src = {0, 0, 600, 600};
@@ -203,14 +204,14 @@ void result_view(SDL_Renderer *renderer)
 	SDL_Delay(3000); // to wait before new game
 }
 
-void render_clock(SDL_Renderer *renderer)
+void render_clock(SDL_Renderer *renderer, Timer *timer)
 {
 	SDL_Texture *clock_t;
 	SDL_Surface *clock;
 
 	//Get current time info
-	update_time();
-	double time = get_time();
+	update_time(timer);
+	double time = get_time(timer);
 
 	SDL_Color white = {255, 255, 255};
 	SDL_Color gray = {185, 185, 185};
